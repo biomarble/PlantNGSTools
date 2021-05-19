@@ -3,7 +3,7 @@ PlantTech线上培训班，配套软件
 
 扫码关注公众号，联系我们：<br>
 
-![qrcode.png](https://i.loli.net/2021/05/19/5cwfuOsHmNBMoRx.png)
+![qrcode.png](./qrcode.png)
 
 
 **本软件包含以下内容**
