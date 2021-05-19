@@ -1,0 +1,47 @@
+citHeader("To cite package '",meta$Package,"' in publications, please use package citation and (at least) one of the articles:", sep="")
+     
+# Grab the version and date from the DESCRIPTION file
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
+aut<-eval(parse(text=meta$"Authors@R"))
+autText<-format(aut, include = c("family", "given"),
+   braces = list(family = c("", ",")))
+
+citEntry(entry = "Article",
+	title = "Generalized blockmodeling of valued networks",
+	volume = "29",
+	shorttitle = "Generalized blockmodeling of valued networks",
+#	doi = "10.1016/j.socnet.2006.04.002",
+	journal = "Social Networks",
+	author = as.person("Ales Ziberna"),
+	year = "2007",
+	number = "1",
+	pages = "105--126",
+	textVersion= "Ziberna, A. (2007). Generalized blockmodeling of valued networks. Social Networks 29(1), 105-126."
+)
+
+citEntry(entry = "Article",
+	title = "Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence",
+	volume = "32",
+	shorttitle = "Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence",
+	doi = "10.1080/00222500701790207",
+	journal = "Journal of Mathematical Sociology",
+	author = as.person("Ales Ziberna"),
+	year = "2008",
+	number = "1",
+	pages = "57--84",
+	textVersion = "Ziberna, A. (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology 32(1), 57–84."
+)
+
+citEntry(entry="Manual",
+	title = meta$Title,
+	author= as.person("Ales Ziberna"),
+	year =year,
+	note =vers,
+	textVersion= paste("Ziberna, A. (", year, 
+	").  ",meta$Title,", ",
+	vers, ".", sep="")
+)
+
+
+

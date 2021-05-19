@@ -1,0 +1,18 @@
+Package: PlantNGSTools
+Type: Package
+Title: NGS bioinformatics tools for plants
+Version: 0.1.0
+Author: Shi Tongwei
+Maintainer: Shi Tongwei <shitongwei@gmail.com>
+Description: NGS bioinformatics tools for plants.
+License: GPL
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 4.0.0)
+Imports:
+    ggplot2 (>= 3.3.2),
+    dplyr (>= 1.0.4),
+    ggrepel(>= 0.9.1),
+    topGO(>= 2.42.0)
+RoxygenNote: 7.1.1
