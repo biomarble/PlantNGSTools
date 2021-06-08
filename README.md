@@ -43,8 +43,6 @@ PlantTech线上培训班，配套软件
 
 
 
-# 文献引用
-
 [^DESeq2]: https://doi.org/10.1186/s13059-014-0550-8
 [^EBSeq]: https://doi.org/10.1093/bioinformatics/btt087
 [^topGO]: https://doi.org/10.1093/bioinformatics/btl140
