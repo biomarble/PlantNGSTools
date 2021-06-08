@@ -10,8 +10,8 @@ DEGAnalysis_DESeq2(
   useFDR = F,
   cut = 0.05,
   FCcut = 2,
-  control = NULL,
-  treat = NULL,
+  control = "Manually_select",
+  treat = "Manually_select",
   outdir = NULL
 )
 }

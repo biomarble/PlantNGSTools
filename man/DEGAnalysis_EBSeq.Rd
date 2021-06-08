@@ -9,8 +9,8 @@ DEGAnalysis_EBSeq(
   cut = 0.05,
   FCcut = 2,
   outdir = NULL,
-  control = NULL,
-  treat = NULL
+  control = "Manually_select",
+  treat = "Manually_select"
 )
 }
 \description{

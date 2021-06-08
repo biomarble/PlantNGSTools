@@ -12,7 +12,8 @@ VolcanoPlot(
   FCcut = 2,
   xlim = 10,
   showlabel = "no",
-  showlabel.num = 10
+  showlabel.num = 10,
+  point.size = 2
 )
 }
 \description{

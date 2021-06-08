@@ -12,7 +12,8 @@ MAPlot(
   FCcut = 2,
   ylim = 10,
   showlabel = "no",
-  showlabel.num = 10
+  showlabel.num = 10,
+  point.size = 2
 )
 }
 \description{
