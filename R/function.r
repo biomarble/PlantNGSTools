@@ -593,9 +593,13 @@ DEGAnalysis_DESeq2 <-
                      'log2FoldChange',
                      'pvalue',
                      'padj')
-        out = rownames_to_column(out, 'ID')
+        exps=counts(dds, normalized=TRUE)
         out = filter(out, !is.na(padj))
-        colnames(out) = c('ID', 'MeanExpression', 'log2FoldChange', 'Pvalue', 'FDR')
+
+        x=exps[match(rownames(out),rownames(exps)),match(meta.data$sample,colnames(exps))]
+        colnames(out) = c('MeanExpression', 'log2FoldChange', 'Pvalue', 'FDR')
+        out=cbind(x,out)
+        out = rownames_to_column(out, 'ID')
         if (useFDR) {
             diff = filter(out, FDR < cut, abs(log2FoldChange) >= abs(log2(FCcut)))
         } else{
@@ -698,7 +702,10 @@ DEGAnalysis_EBSeq <-
         out.filt = cbind(rep(NA, nFilt), rep(NA, nFilt))
         row.names(out.filt) = names(EBOut$AllZeroIndex)
         out = rbind(out.remain, out.filt)
-        colnames(out) = c('log2(FoldChange)', 'FDR')
+        colnames(out) = c('log2FoldChange', 'FDR')
+        normexp=EBOut$DataNorm[match(rownames(out),rownames(EBOut$DataNorm)),]
+        MeanExpression=rowMeans(normexp)
+        out=cbind(normexp,MeanExpression,out)
         out = rownames_to_column(as.data.frame(out), 'ID')
         diff = out[match(EBDERes$DEfound, out$ID), ]
 
@@ -730,7 +737,10 @@ DEGAnalysis_EBSeq <-
             '\n')
         cat(paste0(outdir, '/', control, '.vs.', treat, '.DEGlist.tsv'),
             '\n')
-        return(diff)
+        filepath = NULL
+        filepath$allgene = paste0(outdir, '/', control, '.vs.', treat, '.AllGene.tsv')
+        filepath$deg = paste0(outdir, '/', control, '.vs.', treat, '.DEG.tsv')
+        return(filepath)
     }
 #' @title Volcano plot for DEG analysis results.
 #' @description  do volcano plot.
@@ -753,6 +763,14 @@ VolcanoPlot = function(dat,
     checkParams(showlabel,
                 c("allSig", 'topPvalue', 'topFC', "no"),
                 'showlabel')
+    dat=na.omit(dat)
+    if(!('Pvalue' %in% colnames(dat)) ){
+        if('FDR' %in% colnames(dat)  ){
+            dat$Pvalue=dat$FDR
+        }else{
+            stop(call. = F,"错误：未找到FDR或Pvalue列",'\n')
+        }
+    }
     if (useFDR) {
         input <- dat %>%
             mutate(sig = ifelse(
@@ -878,6 +896,14 @@ MAPlot = function(dat,
                   showlabel = "no",
                   showlabel.num = 10,
 	        point.size=2) {
+    dat=na.omit(dat)
+    if(!('Pvalue' %in% colnames(dat)) ){
+        if('FDR' %in% colnames(dat)  ){
+            dat$Pvalue=dat$FDR
+        }else{
+            stop(call. = F,"错误：未找到FDR或Pvalue列",'\n')
+        }
+    }
     if (useFDR) {
         input <- dat %>%
             mutate(sig = ifelse(
