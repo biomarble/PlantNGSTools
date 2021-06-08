@@ -9,16 +9,16 @@ PlantTech线上培训班，配套软件
 **本软件包含以下内容**
 
 
-|步骤|对应函数|
-|-|-|
-|有生物学重复的差异基因分析|DEGAnalysis_DESeq2|
-|没有生物学重复的差异基因分析|DEGAnalysis_EBSeq|
-|火山图|VolcanoPlot|
-|MA图|MAPlot|
-|KEGG富集|KEGGenrich|
-|KEGG富集气泡图|KEGGbubble|
-|GO富集|GOEnrich|
-|Go富集气泡图|GObubble|
+|步骤|对应函数|引用软件|
+|-|-|-|
+|有生物学重复的差异基因分析|DEGAnalysis_DESeq2|DESeq2[^1]|
+|没有生物学重复的差异基因分析|DEGAnalysis_EBSeq|EBSeq[^2]|
+|火山图|VolcanoPlot|ggplot2|
+|MA图|MAPlot|ggplot2|
+|KEGG富集|KEGGenrich|-|
+|KEGG富集气泡图|KEGGbubble|-|
+|GO富集|GOEnrich|topGO[^3]|
+|Go富集气泡图|GObubble|ggplot2|
 
 # KEGG和GO富集分析支持的物种
 
@@ -38,3 +38,8 @@ PlantTech线上培训班，配套软件
 <br>
 
 本软件包持续更新，关注本页面
+
+参考文献：
+[^1]: https://doi.org/10.1186/s13059-014-0550-8
+[^2]: https://doi.org/10.1093/bioinformatics/btt087
+[^3]: https://doi.org/10.1093/bioinformatics/btl140

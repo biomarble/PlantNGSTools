@@ -551,8 +551,8 @@ DEGAnalysis_DESeq2 <-
               useFDR = F,
               cut = 0.05,
               FCcut = 2,
-              control = NULL,
-              treat = NULL,
+              control = "Manually_select",
+              treat = "Manually_select",
               outdir = NULL) {
         checkGroup(countMatrix, group)
         if (is.null(outdir)) {
@@ -647,8 +647,8 @@ DEGAnalysis_EBSeq <-
               cut = 0.05,
               FCcut = 2,
               outdir = NULL,
-              control = NULL,
-              treat = NULL
+              control = "Manually_select",
+              treat = "Manually_select"
     ) {
         if (is.null(outdir)) {
             outdir = getwd()
@@ -748,7 +748,8 @@ VolcanoPlot = function(dat,
                        FCcut = 2,
                        xlim = 10,
                        showlabel = "no",
-                       showlabel.num = 10) {
+                       showlabel.num = 10,
+		   point.size=2) {
     checkParams(showlabel,
                 c("allSig", 'topPvalue', 'topFC', "no"),
                 'showlabel')
@@ -792,8 +793,7 @@ VolcanoPlot = function(dat,
                     "Non-Significant" = "black",
                     "Up" = "red")
     g <-
-        ggplot(input, aes(log2FoldChange, -log10(Pvalue))) + geom_point(aes(col =
-                                                                                sig, shape = lim), size = 2)
+        ggplot(input, aes(log2FoldChange, -log10(Pvalue))) + geom_point(aes(col = sig, shape = lim), size = point.size)
     g <- g + theme_bw()
     g <-
         g + scale_shape_manual(values = shapevector, guide = 'none')
@@ -859,6 +859,7 @@ checkGroup = function(matrix, group) {
         )
     }
 }
+
 #' @title MA plot for DEG analysis results.
 #' @description  do MA plot.
 #' @import ggplot2
@@ -875,7 +876,8 @@ MAPlot = function(dat,
                   FCcut = 2,
                   ylim = 10,
                   showlabel = "no",
-                  showlabel.num = 10) {
+                  showlabel.num = 10,
+	        point.size=2) {
     if (useFDR) {
         input <- dat %>%
             mutate(sig = ifelse(
@@ -916,7 +918,7 @@ MAPlot = function(dat,
     input[input$log2FoldChange < (-ylim), 'log2FoldChange'] = -ylim
     g <-
         ggplot(input, aes(log10(MeanExpression), log2FoldChange)) + geom_point(aes(color =
-                                                                                       sig, shape = lim), size = 2) +
+                                                                                       sig, shape = lim), size = point.size) +
         theme_bw() +
         scale_shape_manual(values = shapevector, guide = 'none') +
         scale_color_manual(values = colorvector) +
@@ -961,3 +963,4 @@ matrixGroup = function(matrix, groupInfo, method = "mean") {
         tapply(as.double(x), groupInfo[, 2], method))))
     return(matrix)
 }
+
