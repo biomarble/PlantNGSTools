@@ -1,7 +1,7 @@
 Package: PlantNGSTools
 Type: Package
 Title: NGS bioinformatics tools for plants
-Version: 0.2.0
+Version: 0.2.1
 Author: Shi Tongwei
 Maintainer: Shi Tongwei <shitongwei@gmail.com>
 Description: NGS bioinformatics tools for plants.
