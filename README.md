@@ -32,6 +32,8 @@ PlantTech线上培训班，配套软件
 |    sly  |                   SL3.0  |20210518|
 | zma.V4  |           B73 RefGen_v4  |20210518|
 | zma.V5 | Zm-B73-REFERENCE-NAM-5.0 | 20210518|
+| gmx |  Glycine_max_v2.1 | 20210613|
+| pca  | Pogostemon_Cablin_sdata2018 | 20210615|
 
 
 <br>
