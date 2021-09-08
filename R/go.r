@@ -174,6 +174,7 @@ GOenrich_common = function(deglist,
             'gene'
         )
     )
+    all=all[!is.na(all$Pvalue),]
     write.table(
         all[all$Pvalue < 0.05,],
         file = paste0(outdir, '/', outprefix, ".GO.significant.tsv"),

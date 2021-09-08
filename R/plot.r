@@ -24,7 +24,7 @@ KEGGbubble = function(dataset,
                       MainTitle = "",
                       top = 10,
                       ColorScheme = "rw",
-                      ColorReverse = F) {
+                      ColorReverse = F,xangle=45) {
     checkParams(ColorScheme,
                 c("ryb", 'rwb', 'ryg', 'rwg', 'rw', 'bw', 'gw'),
                 'ColorScheme')
@@ -50,11 +50,14 @@ KEGGbubble = function(dataset,
              decreasing = F)$ix
     dataset$KEGGPathway = factor(dataset$KEGGPathway, levels = dataset$KEGGPathway[k])
     if (max(dataset$Count) < 10) {
-        xstep = 1
+        Xbreaks=seq(0, ceiling(max(dataset$Count)), by = 1)
     } else if (max(dataset$Count) < 30) {
-        xstep = 5
+        Xbreaks=seq(0, ceiling(max(dataset$Count)), by = 5)
     } else{
-        xstep = 10
+        Xbreaks=seq(0, ceiling(max(dataset$Count)), by = 10)
+    }
+    if(length(Xbreaks)>10){
+        Xbreaks=pretty(c(0,ceiling(max(dataset$Count))),n=10)
     }
     drawbreaks = pretty(c(floor(min(
         dataset$GeneRatio
@@ -73,8 +76,9 @@ KEGGbubble = function(dataset,
                    range = c(5, 10)) +
         theme(
             plot.title = element_text(hjust = 0.5, colour = "black"),
-            axis.text = element_text(size = 13, colour = "black"),
+            axis.text.y = element_text(size = 13, colour = "black"),
             axis.title = element_text(size = 14, colour = "black"),
+            axis.text.x = element_text(size=13,angle = xangle,colour='black',hjust = 1),
             legend.position = "right"
         ) +
         scale_color_gradientn(colours = col) +
@@ -87,7 +91,7 @@ KEGGbubble = function(dataset,
         ) +
         scale_y_discrete(position = "left") +
         scale_x_continuous(limits = c(0, max(dataset$Count)),
-                           breaks = seq(0, ceiling(max(dataset$Count)), by = xstep))
+                           breaks =Xbreaks)
     return(g)
 }
 
