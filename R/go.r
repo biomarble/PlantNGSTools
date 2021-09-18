@@ -15,6 +15,40 @@ GOEnrich = function(deglist,
     return(res)
 }
 
+
+#' @title GO enrichment using eggnog Mapper annotation.
+#' @description  do GO enrichment by a list of DEGs using eggnog Mapper annotation.
+#' @importFrom magrittr %>%
+#' @importFrom readr read_delim
+#' @export
+#'
+GOEnrich_eggnog = function(deglist,
+                           eggnogFile,
+                           fdr = FALSE,
+                           outdir = NULL,
+                           outprefix = NULL) {
+    data = read_delim(
+        eggnogFile,
+        comment = '##',
+        delim = "\t",
+        na = '-',
+        col_names = T,
+        show_col_types = FALSE,
+        col_select = c('#query', 'GOs')
+    ) %>% na.omit()
+    geneID2GO <- strsplit(data$GOs, ",")
+    names(geneID2GO) = data$`#query`
+    res = GOenrich_common(
+        deglist,
+        geneID2GO,
+        fdr = fdr,
+        outdir = outdir,
+        outprefix = outprefix
+    )
+    return(res)
+}
+
+
 #' @title GO enrichment using pannzer2 result.
 #' @description  do GO enrichment by a list of DEGs using pannzer2 result.
 #' @export

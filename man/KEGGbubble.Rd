@@ -9,7 +9,8 @@ KEGGbubble(
   MainTitle = "",
   top = 10,
   ColorScheme = "rw",
-  ColorReverse = F
+  ColorReverse = F,
+  xangle = 45
 )
 }
 \description{
