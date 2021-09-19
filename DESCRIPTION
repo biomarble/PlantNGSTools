@@ -25,6 +25,6 @@ Imports:
     tibble,
     vegan,
     fBasics,
-    readr,
+    readr (>= 2.0.0),
     KEGGREST
 RoxygenNote: 7.1.1
