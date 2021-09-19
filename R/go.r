@@ -21,6 +21,8 @@ GOEnrich = function(deglist,
 #' @description  do GO enrichment by a list of DEGs using eggnog Mapper annotation.
 #' @importFrom magrittr %>%
 #' @importFrom readr read_delim
+#' @importFrom readr cols
+#' @importFrom readr col_character
 #' @importFrom dplyr select
 #' @export
 #'
