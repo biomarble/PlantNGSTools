@@ -21,6 +21,7 @@ GOEnrich = function(deglist,
 #' @description  do GO enrichment by a list of DEGs using eggnog Mapper annotation.
 #' @importFrom magrittr %>%
 #' @importFrom readr read_delim
+#' @importFrom dplyr select
 #' @export
 #'
 GOEnrich_eggnog = function(deglist,
@@ -35,9 +36,8 @@ GOEnrich_eggnog = function(deglist,
         delim = "\t",
         na = '-',
         col_names = T,
-        show_col_types = FALSE,
-        col_select = c('#query', 'GOs')
-    ) %>% na.omit()
+        col_types =cols(.default = col_character()))%>%
+       dplyr::select(c('#query', 'GOs'))%>% na.omit()
     geneID2GO <- strsplit(data$GOs, ",")
     names(geneID2GO) = data$`#query`
     res = GOenrich_common(
