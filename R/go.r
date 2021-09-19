@@ -3,7 +3,8 @@
 #' @export
 GOEnrich = function(deglist,
                     taxon,
-                    fdr = FALSE,
+                    useFDR = FALSE,
+                    cut=0.05,
                     outdir = NULL,
                     outprefix) {
     checkParams(taxon, names(godb), 'taxon')
@@ -11,7 +12,7 @@ GOEnrich = function(deglist,
     geneID2GO = godb[[taxon]][['db']]
     version = godb[[taxon]][['version']]
     cat('genome version:', version, '\n')
-    res=GOenrich_common(deglist,geneID2GO,fdr=fdr,outdir=outdir,outprefix=outprefix)
+    res=GOenrich_common(deglist,geneID2GO,useFDR=useFDR,cut=cut,outdir=outdir,outprefix=outprefix)
     return(res)
 }
 
@@ -24,7 +25,8 @@ GOEnrich = function(deglist,
 #'
 GOEnrich_eggnog = function(deglist,
                            eggnogFile,
-                           fdr = FALSE,
+                           useFDR = FALSE,
+                           cut=0.05,
                            outdir = NULL,
                            outprefix = NULL) {
     data = read_delim(
@@ -41,7 +43,8 @@ GOEnrich_eggnog = function(deglist,
     res = GOenrich_common(
         deglist,
         geneID2GO,
-        fdr = fdr,
+        useFDR = useFDR,
+        cut=cut,
         outdir = outdir,
         outprefix = outprefix
     )
@@ -54,11 +57,15 @@ GOEnrich_eggnog = function(deglist,
 #' @export
 GOEnrich_pannzer2 = function(deglist,
                     pannzerfile,
-                    fdr = FALSE,
+                    useFDR = FALSE,
+                    cut=0.05,
                     outdir = NULL,
                     outprefix=NULL) {
     geneID2GO = PANNZERres2GOdb(pannzerfile)
-    res=GOenrich_common(deglist,geneID2GO,fdr=fdr,outdir=outdir,outprefix=outprefix)
+    res=GOenrich_common(deglist,geneID2GO,
+                        useFDR = useFDR,
+                        cut=cut,
+                        outdir=outdir,outprefix=outprefix)
     return(res)
 }
 
@@ -67,16 +74,20 @@ GOEnrich_pannzer2 = function(deglist,
 #' @export
 GOEnrich_customTable = function(deglist,
                            tableFile,
-                           fdr = FALSE,
+                           useFDR = FALSE,
+                           cut=0.05,
                            outdir = NULL,
                            outprefix=NULL) {
-    geneID2GOtable=read.table(tableFile,header=T,sep="\t")
+    geneID2GOtable=read.delim(tableFile,header=T,sep="\t")
     checkParams(colnames(geneID2GOtable),c('GeneID','GOID'),string = "geneID2GOtable列名错误")
 
     geneID2GO=lapply(unique(geneID2GOtable$GeneID), function (x) geneID2GOtable$GOID[geneID2GOtable$GeneID==x])
     names(geneID2GO)=unique(geneID2GOtable$GeneID)
 
-    res=GOenrich_common(deglist,geneID2GO,fdr=fdr,outdir=outdir,outprefix=outprefix)
+    res=GOenrich_common(deglist,geneID2GO,
+                        useFDR = useFDR,
+                        cut=cut,
+                        outdir=outdir,outprefix=outprefix)
     return(res)
 }
 
@@ -86,11 +97,15 @@ GOEnrich_customTable = function(deglist,
 #' @export
 GOEnrich_customMapping = function(deglist,
                            mappingfile,
-                           fdr = FALSE,
+                           useFDR = FALSE,
+                           cut=0.05,
                            outdir = NULL,
                            outprefix=NULL) {
     geneID2GO<-readMappings(file=mappingfile)
-    res=GOenrich_common(deglist,geneID2GO,fdr=fdr,outdir=outdir,outprefix=outprefix)
+    res=GOenrich_common(deglist,geneID2GO,
+                        useFDR = useFDR,
+                        cut=cut,
+                        outdir=outdir,outprefix=outprefix)
     return(res)
 }
 
@@ -158,7 +173,7 @@ GOenrichsub <- function(deglist, geneID2GO, class, output) {
 #' @description  convert PANNZER GO annotation(GO.out file) to geneID2GO format.
 #' @importFrom magrittr %>%
 PANNZERres2GOdb=function(PANNZERfile){
-    dat=read.table(PANNZERfile,header=T,sep="\t",)
+    dat=read.delim(PANNZERfile,header=T,sep="\t",)
     GOcontent=cbind(GID=dat$qpid,GOID=paste0('GO:', sprintf("%07d", dat$goid)))%>%as.data.frame()
     geneID2GO=lapply(unique(GOcontent$GID), function (x) GOcontent$GOID[GOcontent$GID==x])
     names(geneID2GO)=unique(GOcontent$GID)
@@ -170,10 +185,13 @@ PANNZERres2GOdb=function(PANNZERfile){
 #' @import ggplot2
 #' @import GO.db
 #' @importFrom  dplyr select
+#' @importFrom  dplyr group_by
+#' @importFrom  dplyr mutate
 #' @import topGO
 GOenrich_common = function(deglist,
                            geneID2GO,
-                           fdr = FALSE,
+                           useFDR = FALSE,
+                           cut=0.05,
                            outdir = NULL,
                            outprefix=NULL) {
     if (is.null(outdir)) {
@@ -194,6 +212,7 @@ GOenrich_common = function(deglist,
                          geneID2GO,
                          'CC',
                          paste0(outdir, '/', outprefix))
+
     all = rbind(BP.res, MF.res, CC.res)
     all$Pvalue = as.numeric(all$Pvalue)
     all = all %>% select(
@@ -209,8 +228,15 @@ GOenrich_common = function(deglist,
         )
     )
     all=all[!is.na(all$Pvalue),]
+
+    if(useFDR){
+        all=all%>%dplyr::group_by(Class)%>%dplyr::mutate(FDR=p.adjust(Pvalue,method='BH'))
+        sigres=all[all$FDR < cut,]
+    }else{
+        sigres=all[all$Pvalue < cut,]
+    }
     write.table(
-        all[all$Pvalue < 0.05,],
+        sigres,
         file = paste0(outdir, '/', outprefix, ".GO.significant.tsv"),
         sep = "\t",
         quote = FALSE,

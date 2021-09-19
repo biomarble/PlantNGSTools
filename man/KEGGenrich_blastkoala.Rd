@@ -9,7 +9,7 @@ KEGGenrich_blastkoala(
   blastkoalafile,
   outdir = NULL,
   outprefix,
-  fdr = FALSE
+  useFDR = FALSE
 )
 }
 \description{

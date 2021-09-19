@@ -106,16 +106,19 @@ KEGGbubble = function(dataset,
 GObubble = function(dataset,
                     MainTitle = "",
                     onlySig = T,
-                    pCut = 0.05,
+                    useFDR=F,
+                    cut = 0.05,
                     top = 10,
                     ColorScheme = "rw",
                     ColorReverse = F) {
     checkParams(ColorScheme,
                 c("ryb", 'rwb', 'ryg', 'rwg', 'rw', 'bw', 'gw'),
                 'ColorScheme')
-
+    if(useFDR){
+        dataset$Pvalue=p.adjust(dataset$Pvalue,method="BH")
+    }
     if (onlySig) {
-        dataset = dataset %>% filter(Pvalue < pCut)
+        dataset = dataset %>% filter(Pvalue < cut)
     }
     #   dataset$Term=strtrim(dataset$Term,maxTermLen)
     dataset$Pvalue = -log10(dataset$Pvalue)

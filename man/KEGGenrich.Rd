@@ -4,7 +4,7 @@
 \alias{KEGGenrich}
 \title{KEGG pathway enrichment tools.}
 \usage{
-KEGGenrich(deglist, taxon, outdir = NULL, outprefix, fdr = FALSE)
+KEGGenrich(deglist, taxon, outdir = NULL, outprefix, useFDR = FALSE)
 }
 \description{
 do KEGG pathway enrichment by a list of degs.

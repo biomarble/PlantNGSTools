@@ -4,7 +4,7 @@
 \alias{GOEnrich}
 \title{GO enrichment .}
 \usage{
-GOEnrich(deglist, taxon, fdr = FALSE, outdir = NULL, outprefix)
+GOEnrich(deglist, taxon, useFDR = FALSE, cut = 0.05, outdir = NULL, outprefix)
 }
 \description{
 do GO enrichment by a list of DEGs.

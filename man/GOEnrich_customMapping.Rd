@@ -7,7 +7,8 @@
 GOEnrich_customMapping(
   deglist,
   mappingfile,
-  fdr = FALSE,
+  useFDR = FALSE,
+  cut = 0.05,
   outdir = NULL,
   outprefix = NULL
 )

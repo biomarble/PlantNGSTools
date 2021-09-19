@@ -5,10 +5,10 @@ KEGGenrich <- function(deglist,
                        taxon,
                        outdir = NULL,
                        outprefix,
-                       fdr = FALSE) {
+                       useFDR = FALSE) {
     checkParams(taxon, names(keggdb), 'taxon')
     pathinfo = keggdb[[taxon]]
-    res=KEGGenrich_common(deglist,pathinfo,outdir,outprefix,fdr)
+    res=KEGGenrich_common(deglist,pathinfo,outdir,outprefix,fdr=useFDR)
     return(res)
 }
 
@@ -19,9 +19,9 @@ KEGGenrich_blastkoala <- function(deglist,
                        blastkoalafile,
                        outdir = NULL,
                        outprefix,
-                       fdr = FALSE) {
+                       useFDR = FALSE) {
     pathinfo = KAAS2Keggdb(blastkoalafile)
-    res=KEGGenrich_common(deglist,pathinfo,outdir,outprefix,fdr)
+    res=KEGGenrich_common(deglist,pathinfo,outdir,outprefix,fdr=useFDR)
     return(res)
 }
 

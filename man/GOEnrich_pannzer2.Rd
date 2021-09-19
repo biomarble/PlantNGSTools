@@ -7,7 +7,8 @@
 GOEnrich_pannzer2(
   deglist,
   pannzerfile,
-  fdr = FALSE,
+  useFDR = FALSE,
+  cut = 0.05,
   outdir = NULL,
   outprefix = NULL
 )

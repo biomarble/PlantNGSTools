@@ -8,7 +8,8 @@ GObubble(
   dataset,
   MainTitle = "",
   onlySig = T,
-  pCut = 0.05,
+  useFDR = F,
+  cut = 0.05,
   top = 10,
   ColorScheme = "rw",
   ColorReverse = F
