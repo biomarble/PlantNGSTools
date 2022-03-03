@@ -7,6 +7,7 @@
 KEGGenrich_blastkoala(
   deglist,
   blastkoalafile,
+  taxonid = "ko",
   outdir = NULL,
   outprefix,
   useFDR = FALSE

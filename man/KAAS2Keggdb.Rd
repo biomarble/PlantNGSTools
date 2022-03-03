@@ -4,7 +4,7 @@
 \alias{KAAS2Keggdb}
 \title{convert KEGG kaas annotation to keggdb addon.}
 \usage{
-KAAS2Keggdb(KAASfile)
+KAAS2Keggdb(KAASfile, taxonid = "ko")
 }
 \description{
 convert KEGG kaas annotation to keggdb addon.

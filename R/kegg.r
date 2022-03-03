@@ -17,10 +17,11 @@ KEGGenrich <- function(deglist,
 #' @export
 KEGGenrich_blastkoala <- function(deglist,
                        blastkoalafile,
+                       taxonid='ko',
                        outdir = NULL,
                        outprefix,
                        useFDR = FALSE) {
-    pathinfo = KAAS2Keggdb(blastkoalafile)
+    pathinfo = KAAS2Keggdb(blastkoalafile,taxonid)
     res=KEGGenrich_common(deglist,pathinfo,outdir,outprefix,fdr=useFDR)
     return(res)
 }
@@ -156,23 +157,28 @@ KEGGenrich_common=function(deglist,
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
 #' @import KEGGREST
-KAAS2Keggdb=function(KAASfile){
+KAAS2Keggdb=function(KAASfile,taxonid='ko'){
 
     koquery=read.delim(KAASfile,sep="\t",header=F,na.strings = "",col.names = c('GeneID','ID'))%>%
         filter(!is.na(ID))
 
     koquery$ID=paste0("ko:",koquery$ID)
-
-    pathwayName = keggList('pathway', organism = 'ko')
+    pathwayName = keggList('pathway', organism = taxonid)
     pathwayName = cbind(
         PathwayID=names(pathwayName) %>% gsub('path:','',x = .),
         Pathway=unname(pathwayName)
     ) %>% as.data.frame()
 
-    kopathway=keggLink("pathway",'ko')
+    kopathway=keggLink("pathway",taxonid)
     kopathway=data.frame(ID=names(kopathway),PathwayID=unname(kopathway))
-    kopathway=kopathway[grep(pattern = 'path:ko',x = kopathway$PathwayID ),]
+    kopathway=kopathway[grep(pattern = paste0('path:',taxonid),x = kopathway$PathwayID ),]
     kopathway$PathwayID=gsub('path:','',kopathway$PathwayID)
+
+    if(taxonid!='ko'){
+        gid2ko=keggLink('ko',taxonid)
+        kopathway$ID=gid2ko[kopathway$ID]
+    }
+
 
     res=left_join(kopathway,koquery,by="ID")%>%left_join(pathwayName,by="PathwayID")%>%select('GeneID','ID','PathwayID','Pathway')%>%filter(!is.na(GeneID))
     return(res)
