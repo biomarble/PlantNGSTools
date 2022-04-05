@@ -216,6 +216,7 @@ GOenrich_common = function(deglist,
                          paste0(outdir, '/', outprefix))
 
     all = rbind(BP.res, MF.res, CC.res)
+    all[all$Pvalue=='< 1e-30','Pvalue']=1e-31
     all$Pvalue = as.numeric(all$Pvalue)
     all = all %>% select(
         c(
