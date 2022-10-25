@@ -31,6 +31,7 @@ KEGGenrich_blastkoala <- function(deglist,
 #' @import R2HTML
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
+#' @importFrom dplyr mutate
 KEGGenrich_common=function(deglist,
                   pathinfo,
                   outdir = NULL,
@@ -54,7 +55,7 @@ KEGGenrich_common=function(deglist,
     geneLink <- NULL
     allurlColor <- NULL
     allgeneLink <- NULL
-    options(scipen = 3)
+    options(scipen = 9)
     for (i in seq(1, nrow(pathway))) {
         pid = pathway[i, 'PathwayID']
         allInPath = unique(allinfo[allinfo[, 'PathwayID'] %in% pid, ])
@@ -81,7 +82,7 @@ KEGGenrich_common=function(deglist,
         } else{
             geneLink[i] = apply(as.matrix(Link), 2, paste, collapse = ", ")
         }
-        
+
         geneLink[i]=paste('<a href="#" data-toggle="popover" data-html="true" data-trigger="click" title="DEG List" data-content=\'',geneLink[i],'\'> ',x,'</a>')
 
         aLink = paste('<a target="_blank" href=',
@@ -107,8 +108,7 @@ KEGGenrich_common=function(deglist,
                          'GenesInPathway',
                          'Pvalue')
     if (fdr) {
-        fdr = p.adjust(p[, 3], method = "BH")
-        output = cbind(output, FDR = fdr)
+        output = cbind(output, FDR = p.adjust(p[, 3], method = "BH"))
     }
     ind = order(output[, "Pvalue"])
     output = output[ind, ]
@@ -179,7 +179,7 @@ KEGGenrich_common=function(deglist,
         file = target,
         Border = 0,
         innerBorder = 0,
-        digits=3,
+        digits=3,nsmall=3,
         row.names = FALSE,
         sortableDF =FALSE,
         decimal.mark="."
