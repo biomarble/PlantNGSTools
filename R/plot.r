@@ -122,8 +122,9 @@ GObubble = function(dataset,
     }
     #   dataset$Term=strtrim(dataset$Term,maxTermLen)
     dataset$Pvalue = -log10(dataset$Pvalue)
-    dataset = dataset %>% group_by(Class) %>% slice_max(order_by = Pvalue, n = top) %>%
-        as.data.frame
+    dataset = dataset %>% group_by(Class) %>%
+        slice_max(order_by = Pvalue, n = top) %>%as.data.frame
+    dataset$Term=gsub(', ',',\n',dataset$Term)
 
     dataset$GeneRatio = dataset$Significant / dataset$AllDEG * 100
     order <- order(dataset$GeneRatio)
@@ -139,14 +140,15 @@ GObubble = function(dataset,
         col = rev(col)
     }
     col = col[15:85]
-
     colorbreaks = pretty(dataset$Pvalue, 5)
     sizebreaks = pretty(dataset$GeneRatio, 5)
     g <- ggplot(data = dataset, mapping = aes(Significant, Term)) +
+        theme_bw() +
+        theme(aspect.ratio = 1.2)+
         geom_point(aes(size = GeneRatio, color = Pvalue),
                    show.legend = T,
                    stroke = 1) +
-        facet_grid(Class ~ ., scales = "free", space = "free") +
+        facet_wrap(~Class, scales = 'free_y',ncol=1,strip.position = 'right') +
         scale_size(
             name = sizeLabel,
             breaks = sizebreaks,
@@ -163,7 +165,6 @@ GObubble = function(dataset,
             size = sizeLabel,
             color = colorLabel
         ) +
-        theme_bw() +
         theme(
             plot.title = element_text(hjust = 0.5),
             axis.text = element_text(colour = "black", size = 11),
