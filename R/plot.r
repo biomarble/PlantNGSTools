@@ -48,6 +48,7 @@ KEGGbubble = function(dataset,
     k = sort(dataset$Count,
              index.return = T,
              decreasing = F)$ix
+    dataset$KEGGPathway=unlist(lapply(dataset$KEGGPathway, function(x) {n=strsplit(x, split=";");n[[1]][1]}))
     dataset$KEGGPathway = factor(dataset$KEGGPathway, levels = dataset$KEGGPathway[k])
     if (max(dataset$Count) < 10) {
         Xbreaks=seq(0, ceiling(max(dataset$Count)), by = 1)
@@ -107,6 +108,8 @@ GObubble = function(dataset,
                     MainTitle = "",
                     onlySig = T,
                     useFDR=F,
+                    limitTerm=T,
+                    limitSplit=", ",
                     cut = 0.05,
                     top = 10,
                     ColorScheme = "rw",
@@ -124,7 +127,12 @@ GObubble = function(dataset,
     dataset$Pvalue = -log10(dataset$Pvalue)
     dataset = dataset %>% group_by(Class) %>%
         slice_max(order_by = Pvalue, n = top) %>%as.data.frame
-    dataset$Term=gsub(', ',',\n',dataset$Term)
+     
+    if(limitTerm){
+     dataset$Term=sapply(strsplit(dataset$Term,split = limitSplit),function(x) x[1])
+    }else{
+     dataset$Term=gsub(', ',',\n',dataset$Term)
+    }
 
     dataset$GeneRatio = dataset$Significant / dataset$AllDEG * 100
     order <- order(dataset$GeneRatio)
