@@ -144,7 +144,7 @@ GObubble = function(dataset,
     sizebreaks = pretty(dataset$GeneRatio, 5)
     g <- ggplot(data = dataset, mapping = aes(Significant, Term)) +
         theme_bw() +
-        theme(aspect.ratio = 1.2)+
+        theme(aspect.ratio = 1.1)+
         geom_point(aes(size = GeneRatio, color = Pvalue),
                    show.legend = T,
                    stroke = 1) +
