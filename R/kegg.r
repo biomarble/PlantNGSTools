@@ -66,7 +66,7 @@ KEGGenrich_common=function(deglist,
         p[i, 2] = m
         p[i, 3] = phyper(x - 1, m, N - m, k, lower.tail = FALSE)
         urlColor[i] = apply(as.matrix(paste(
-            "/", t(degInPath[, 'ID']), '%09red', sep = ""
+            "/", t(unique(degInPath[, 'ID'])), '%09red', sep = ""
         )), 2, paste, collapse = "")
         Link = paste('<a target="_blank" href=',
                      shQuote(
