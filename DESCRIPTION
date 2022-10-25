@@ -1,7 +1,7 @@
 Package: PlantNGSTools
 Type: Package
 Title: NGS bioinformatics tools for plants
-Version: 0.3.3
+Version: 0.3.4
 Author: Marble
 Maintainer: Marble <biomarble@163.com>
 Description: NGS bioinformatics tools for plants.
@@ -28,4 +28,4 @@ Imports:
     fBasics,
     readr,
     KEGGREST
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1

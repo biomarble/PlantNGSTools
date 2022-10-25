@@ -30,6 +30,7 @@ KEGGenrich_blastkoala <- function(deglist,
 #' @description  do KEGG pathway enrichment by a list of degs common.
 #' @import R2HTML
 #' @importFrom magrittr %>%
+#' @importFrom dplyr select
 KEGGenrich_common=function(deglist,
                   pathinfo,
                   outdir = NULL,
@@ -51,11 +52,14 @@ KEGGenrich_common=function(deglist,
     p <- data.frame()
     urlColor <- NULL
     geneLink <- NULL
+    allurlColor <- NULL
+    allgeneLink <- NULL
+    options(scipen = 3)
     for (i in seq(1, nrow(pathway))) {
         pid = pathway[i, 'PathwayID']
-        allInPath = allinfo[allinfo[, 'PathwayID'] %in% pid, ]
+        allInPath = unique(allinfo[allinfo[, 'PathwayID'] %in% pid, ])
         m = length(unique(allInPath[, 1]))
-        degInPath = deginfo[deginfo[, 'PathwayID'] %in% pid, ]
+        degInPath = unique(deginfo[deginfo[, 'PathwayID'] %in% pid, ])
         x = length(unique(degInPath[, 1]))
         p[i, 1] = x
         p[i, 2] = m
@@ -63,7 +67,7 @@ KEGGenrich_common=function(deglist,
         urlColor[i] = apply(as.matrix(paste(
             "/", t(degInPath[, 'ID']), '%09red', sep = ""
         )), 2, paste, collapse = "")
-        Link = paste('<a href=',
+        Link = paste('<a target="_blank" href=',
                      shQuote(
                          paste('https://www.genome.jp/entry/', degInPath[, 'ID'], sep = "")
                      ),
@@ -77,6 +81,24 @@ KEGGenrich_common=function(deglist,
         } else{
             geneLink[i] = apply(as.matrix(Link), 2, paste, collapse = ", ")
         }
+        
+        geneLink[i]=paste('<a href="#" data-toggle="popover" data-html="true" data-trigger="click" title="DEG List" data-content=\'',geneLink[i],'\'> ',x,'</a>')
+
+        aLink = paste('<a target="_blank" href=',
+                     shQuote(
+                         paste('https://www.genome.jp/entry/', allInPath[, 'ID'], sep = "")
+                     ),
+                     '/',
+                     '>',
+                     allInPath[, 'GeneID'],
+                     '</a>',
+                     sep = "")
+        if (m == 0) {
+            allgeneLink[i] = "--"
+        } else{
+            allgeneLink[i] = apply(as.matrix(aLink), 2, paste, collapse = ", ")
+        }
+        allgeneLink[i]=paste('<a href="#" data-toggle="popover" data-trigger="click" data-html="true" title="All Gene List" data-content=\'',allgeneLink[i],'\'> ',m,'</a>')
     }
     output = cbind(pathway, p)
     colnames(output) = c('ID',
@@ -92,12 +114,20 @@ KEGGenrich_common=function(deglist,
     output = output[ind, ]
     urlColor = urlColor[ind]
     DEGs = geneLink[ind]
-    output2 = cbind(output, DEGs)
+    allGenes = allgeneLink[ind]
+    output2 = cbind(output, DEGs,allGenes)
+
     ind = output$DEGsInPathway > 0
     output = output[ind, ]
     urlColor = urlColor[ind]
-    DEGs = geneLink[ind]
     output2 = output2[ind, ]
+
+   if (fdr) {
+        output2 = output2%>%select(ID,Pathway,DEGsInPathway=DEGs,GenesInPathway=allGenes,Pvalue,FDR)
+    }else{
+        output2 = output2%>%select(ID,Pathway,DEGsInPathway=DEGs,GenesInPathway=allGenes,Pvalue)
+    }
+
     write.table(
         output,
         file = paste(outdir, "/", outprefix, ".tsv", sep = ""),
@@ -115,14 +145,14 @@ KEGGenrich_common=function(deglist,
     )
     htmlOUT <-
         transform(output2,
-                  ID = paste('<a href = ', shQuote(url), '/', '>', urlTitles, '</a>'))
+                  ID = paste('<a  target="_blank" href = ', shQuote(url), '/', '>', urlTitles, '</a>'))
     target <-
         HTMLInitFile(
             Title = "KEGG Pathway Ernichment Results",
             outdir = outdir,
             filename = paste0(outprefix),
             BackGroundColor = "#f8f8f8",
-            useGrid = T,
+            useGrid = F,
             useLaTeX = F,
             HTMLframe = F
         )
@@ -131,12 +161,28 @@ KEGGenrich_common=function(deglist,
         target,
         append = T
     )
+    write(
+        '<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>$(document).ready(function(){$(\'[data-toggle="popover"]\').popover();});</script>
+        <script>$(\'body\').on(\'click\',function (e) {$(\'[data-toggle="popover"]\').each(function () {if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $(\'.popover\').has(e.target).length === 0) {$(this).popover(\'hide\');}});});</script>
+        ' ,
+        target,
+        append = T
+    )
     HTML(
         htmlOUT,
+        classtable='"table table-hover table-striped table-bordered"',
+        classfirstline = '"thead-dark"',
         file = target,
-        innerBorder = 1,
-        row.names = F,
-        digits = 3
+        Border = 0,
+        innerBorder = 0,
+        digits=3,
+        row.names = FALSE,
+        sortableDF =FALSE,
+        decimal.mark="."
     )
     HTMLEndFile()
     cat('Enrichment Done! Result files saved:\n',
@@ -156,17 +202,19 @@ KEGGenrich_common=function(deglist,
 #' @importFrom dplyr left_join
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
+#' @importFrom dplyr slice
+#' @importFrom dplyr group_by
+#' @importFrom dplyr ungroup
 #' @import KEGGREST
 KAAS2Keggdb=function(KAASfile,taxonid='ko'){
 
     koquery=read.delim(KAASfile,sep="\t",header=F,na.strings = "",col.names = c('GeneID','ID'))%>%
-        filter(!is.na(ID))
+    filter(!is.na(ID))%>%mutate(KOID=paste0('ko:',ID),.keep='unused')
 
-    koquery$ID=paste0("ko:",koquery$ID)
     pathwayName = keggList('pathway', organism = taxonid)
     pathwayName = cbind(
-        PathwayID=names(pathwayName) %>% gsub('path:','',x = .),
-        Pathway=unname(pathwayName)
+    PathwayID=names(pathwayName) %>% gsub('path:','',x = .),
+    Pathway=unname(pathwayName)
     ) %>% as.data.frame()
 
     kopathway=keggLink("pathway",taxonid)
@@ -175,11 +223,13 @@ KAAS2Keggdb=function(KAASfile,taxonid='ko'){
     kopathway$PathwayID=gsub('path:','',kopathway$PathwayID)
 
     if(taxonid!='ko'){
-        gid2ko=keggLink('ko',taxonid)
-        kopathway$ID=gid2ko[kopathway$ID]
+      gid2ko=keggLink('ko',taxonid)
+       kopathway$KOID=gid2ko[kopathway$ID]
+    }else{
+       kopathway$KOID=kopathway$ID
     }
+    res=left_join(kopathway,koquery,by="KOID")%>%left_join(pathwayName,by="PathwayID")%>%select('GeneID','ID','KOID','PathwayID','Pathway')%>%
+        filter(!is.na(GeneID))%>%group_by(GeneID,KOID,PathwayID)%>%slice(1)%>%ungroup()%>%as.data.frame()
 
-
-    res=left_join(kopathway,koquery,by="ID")%>%left_join(pathwayName,by="PathwayID")%>%select('GeneID','ID','PathwayID','Pathway')%>%filter(!is.na(GeneID))
     return(res)
 }
