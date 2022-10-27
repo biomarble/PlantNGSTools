@@ -9,6 +9,8 @@ GObubble(
   MainTitle = "",
   onlySig = T,
   useFDR = F,
+  limitTerm = T,
+  limitSplit = ", ",
   cut = 0.05,
   top = 10,
   ColorScheme = "rw",

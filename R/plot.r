@@ -449,3 +449,123 @@ multiTraitPlot<-function(data){
     }
     pairs(data,upper.panel=custom_cor,diag.panel=custom_hist,lower.panel=custom_smooth)
 }
+
+#' @title get All Children  .
+#' @description get all children  .
+#' @importFrom GO.db GOBPCHILDREN
+#' @importFrom GO.db GOMFCHILDREN
+#' @importFrom GO.db GOCCCHILDREN
+#' @importFrom AnnotationDbi mget
+#' @import topGO
+getAllChildren <- function(goids,class='BP')
+{
+  if(class == "BP"){
+    ans <- unique(unlist(AnnotationDbi::mget(goids, GOBPCHILDREN), use.names=FALSE))
+  }else if(class == "CC"){
+    ans <- unique(unlist(AnnotationDbi::mget(goids, GOCCCHILDREN), use.names=FALSE))
+  }else if(class == "MF"){
+    ans <- unique(unlist(AnnotationDbi::mget(goids, GOMFCHILDREN), use.names=FALSE))
+  }else{
+    stop('error\n')
+  }
+  ans <- ans[!is.na(ans)]
+}
+
+#' @title GO barplot  .
+#' @description GO barplot  .
+#' @importFrom dplyr select
+#' @importFrom reshape2 melt
+#' @importFrom magrittr %>%
+#' @import ggplot2
+#' @import topGO
+#' @export
+GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,panzer2=NULL,customTable=NULL){
+  if(!is.null(taxonid)){
+    checkParams(taxonid, names(godb), 'taxon')
+    geneID2GO = godb[[taxonid]][['db']]
+  }else  if(!is.null(customMapping)){
+    geneID2GO<-readMappings(file=customMapping)
+  }else  if(!is.null(eggnog)){
+    data = read_delim(
+        eggnog,
+        comment = '##',
+        delim = "\t",
+        na = '-',
+        col_names = T,
+        col_types =cols(.default = col_character()))%>%
+       dplyr::select(c('#query', 'GOs'))%>% na.omit()
+    geneID2GO <- strsplit(data$GOs, ",")
+    names(geneID2GO) = data$`#query`
+  }else  if(!is.null(panzer2)){
+    geneID2GO = PANNZERres2GOdb(panzer2)
+  }else  if(!is.null(customTable)){
+    geneID2GOtable=read.delim(customTable,header=T,sep="\t")
+    checkParams(colnames(geneID2GOtable),c('GeneID','GOID'),string = "geneID2GOtable列名错误")
+    geneID2GO=lapply(unique(geneID2GOtable$GeneID), function (x) geneID2GOtable$GOID[geneID2GOtable$GeneID==x])
+    names(geneID2GO)=unique(geneID2GOtable$GeneID)
+  }else{
+    stop("error no GO database selected!\n")
+  }
+  GO2geneID <- topGO::inverseList(geneID2GO)
+  allgenes=names(geneID2GO)
+  universe = factor(as.integer(allgenes %in% deglist))
+  names(universe) = allgenes
+  bp_terms <- getAllChildren("GO:0008150",'BP')
+  cc_terms <- getAllChildren("GO:0005575",'CC')
+  mf_terms <- getAllChildren("GO:0003674",'MF')
+  
+  bpObj <-new("topGOdata",nodeSize = 1,ontology = 'BP',allGenes = universe,annot = annFUN.gene2GO,gene2GO = geneID2GO)
+  mfObj <-new("topGOdata",nodeSize = 1,ontology = 'MF',allGenes = universe,annot = annFUN.gene2GO,gene2GO = geneID2GO)
+  ccObj <-new("topGOdata",nodeSize = 1,ontology = 'CC',allGenes = universe,annot = annFUN.gene2GO,gene2GO = geneID2GO)
+  
+  allbpGO = topGO::genesInTerm(bpObj,bp_terms)
+  allccGO = topGO::genesInTerm(ccObj,cc_terms)
+  allmfGO = topGO::genesInTerm(mfObj,mf_terms)
+  
+  stat1=data.frame(ID=AnnotationDbi::Term(names(allbpGO)),
+                   allGene=sapply(names(allbpGO),
+                                  function(x){length(allbpGO[[x]])}),
+                   DEG=sapply(names(allbpGO),
+                              function(x){length(intersect(deglist,allbpGO[[x]]))}),
+                   Class='BP'
+  )
+  stat2=data.frame(ID=AnnotationDbi::Term(names(allmfGO)),
+                   allGene=sapply(names(allmfGO),
+                                  function(x){length(allmfGO[[x]])}),
+                   DEG=sapply(names(allmfGO),
+                              function(x){length(intersect(deglist,allmfGO[[x]]))}),
+                   Class='MF'
+  )
+  stat3=data.frame(ID=AnnotationDbi::Term(names(allccGO)),
+                   allGene=sapply(names(allccGO),
+                                  function(x){length(allccGO[[x]])}),
+                   DEG=sapply(names(allccGO),
+                              function(x){length(intersect(deglist,allccGO[[x]]))}),
+                   Class='CC'
+  )
+  plotdata=rbind(stat1,stat2,stat3)%>%as.data.frame()%>%reshape2::melt(id.vars=c('ID','Class'))
+  
+  ord=order(plotdata[plotdata$variable=='allGene','value'],decreasing = T)
+  plotdata$ID=factor(plotdata$ID,levels=plotdata[plotdata$variable=='allGene','ID'][ord])
+  plotdata[plotdata$value==0,'value']=1
+  usecolors=c("#A6CEE3", "#1F78B4" ,"#B2DF8A" ,"#33A02C", "#FB9A99", "#E31A1C")
+  names(usecolors)=c('BP DEG','BP allGene','CC DEG','CC allGene','MF DEG','MF allGene')
+  g=ggplot(plotdata,aes(ID,value))+
+    geom_bar(aes(fill=paste(Class,variable)),stat='identity',position = 'dodge')+
+    labs(x="",y="",fill="")+
+    facet_grid(.~Class,scales = 'free',space='free')+
+    scale_y_continuous(trans='log10',expand=c(0,0))+
+    scale_fill_manual(values=usecolors)+
+    theme_bw()+
+    theme(
+      strip.background = element_blank(),
+      strip.placement = 'outside',
+      legend.position="right",
+      axis.text.x = element_text(angle=45,hjust = 1)
+    )+
+    guides(
+      fill = guide_legend(ncol = 2,byrow = T,label.position = 'left')
+    )
+
+  return(g)
+}
