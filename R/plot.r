@@ -27,9 +27,12 @@ colorScheme = function(colorsheme = "ryb", n = 100) {
 #' @description  do KEGG pathway enrichment bubble plot using KEGGenrich result.
 #' @import ggplot2
 #' @importFrom magrittr %>%
+#' @importFrom scales label_wrap
 #' @export
 KEGGbubble = function(dataset,
                       MainTitle = "",
+                      TrimName = F,
+                      NameWidth = 50,
                       top = 10,
                       ColorScheme = "rw",
                       ColorReverse = F,xangle=45) {
@@ -43,6 +46,10 @@ KEGGbubble = function(dataset,
     col = col[15:85]
 
     colnames(dataset) = c('ID', 'KEGGPathway', 'Count', 'all', 'P')
+
+    if(TrimName){
+        dataset$KEGGPathway=strtrim(dataset$KEGGPathway,NameWidth)
+    }
 
     k = sort(dataset$P,
              index.return = T,
@@ -98,7 +105,7 @@ KEGGbubble = function(dataset,
             x = 'Count',
             color = expression(-log[10] * italic(P))
         ) +
-        scale_y_discrete(position = "left") +
+        scale_y_discrete(position = "left",labels=scales::label_wrap(NameWidth)) +
         scale_x_continuous(limits = c(0, max(dataset$Count)),
                            breaks =Xbreaks)
     return(g)
