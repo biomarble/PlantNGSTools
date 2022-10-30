@@ -99,7 +99,7 @@ KEGGenrich_common=function(deglist,
             geneLink[i] = apply(as.matrix(Link), 2, paste, collapse = ", ")
         }
 
-        geneLink[i]=paste('<a href="#" data-toggle="popover" data-html="true" data-trigger="click" title="DEG List" data-content=\'',geneLink[i],'\'> ',x,'</a>')
+        geneLink[i]=paste('<button class="btn btn-link "  data-toggle="popover" data-html="true" data-trigger="click" title="DEG List" data-content=\'',geneLink[i],'\'> ',x,'</button>')
 
         aLink = paste('<a target="_blank" href=',
                      shQuote(
@@ -115,7 +115,7 @@ KEGGenrich_common=function(deglist,
         } else{
             allgeneLink[i] = apply(as.matrix(aLink), 2, paste, collapse = ", ")
         }
-        allgeneLink[i]=paste('<a href="#" data-toggle="popover" data-trigger="click" data-html="true" title="All Gene List" data-content=\'',allgeneLink[i],'\'> ',m,'</a>')
+        allgeneLink[i]=paste('<button class="btn btn-link"  data-toggle="popover" data-trigger="click" data-html="true" title="All Gene List" data-content=\'',allgeneLink[i],'\'> ',m,'</button>')
     }
     output = cbind(pathway, p)
     colnames(output) = c('ID',
@@ -172,11 +172,11 @@ KEGGenrich_common=function(deglist,
             useLaTeX = F,
             HTMLframe = F
         )
-    write(
-        "<style>table{border-collapse:collapse;width:1280px;}a:link,a:visited {color: #3366FF;text-decoration: none; }a:hover,a:active {color: #ff3366;text-decoration: none; };</style>",
-        target,
-        append = T
-    )
+ #   write( #insert global css
+ #       "<style>table{border-collapse:collapse;width:1280px;}</style>",
+ #       target,
+ #       append = T
+ #   )
     write(
         '<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
@@ -200,7 +200,6 @@ KEGGenrich_common=function(deglist,
         sortableDF =FALSE,
         decimal.mark="."
     )
-    HTMLEndFile()
     cat('Enrichment Done! Result files saved:\n',
         outdir,
         '/',
