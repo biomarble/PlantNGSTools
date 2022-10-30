@@ -13,6 +13,19 @@ KEGGbubble(
   xangle = 45
 )
 }
+\arguments{
+\item{dataset}{a dataframe of KEGG Enrichment output, with these columns:'ID', 'KEGGPathway', 'Count', 'all', 'P'}
+
+\item{MainTitle}{main title}
+
+\item{top}{top n kegg pathways used to plot}
+
+\item{ColorScheme}{"ryb", 'rwb', 'ryg', 'rwg', 'rw', 'bw', 'gw'}
+
+\item{ColorReverse}{whether to reverse color order}
+
+\item{xangle}{angle of x axis text}
+}
 \description{
 do KEGG pathway enrichment bubble plot using KEGGenrich result.
 }

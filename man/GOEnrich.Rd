@@ -6,6 +6,19 @@
 \usage{
 GOEnrich(deglist, taxon, useFDR = FALSE, cut = 0.05, outdir = NULL, outprefix)
 }
+\arguments{
+\item{deglist}{DEG vector}
+
+\item{taxon}{taxon id , use GOdbInfo() to check available ids}
+
+\item{useFDR}{whether to use FDR}
+
+\item{cut}{significant pvalue threshold, if useFDR is set, use FDR instead}
+
+\item{outdir}{output directory}
+
+\item{outprefix}{output file prefix}
+}
 \description{
 do GO enrichment by a list of DEGs.
 }

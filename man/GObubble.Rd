@@ -2,21 +2,42 @@
 % Please edit documentation in R/plot.r
 \name{GObubble}
 \alias{GObubble}
-\title{GO enrichment bubble plot.}
+\title{GO enrichment bubble plot}
 \usage{
 GObubble(
   dataset,
   MainTitle = "",
   onlySig = T,
   useFDR = F,
-  limitTerm = T,
-  limitSplit = ", ",
   cut = 0.05,
   top = 10,
+  TrimTerm = T,
+  TermWidth = 60,
   ColorScheme = "rw",
   ColorReverse = F
 )
 }
+\arguments{
+\item{dataset}{a dataframe of GOEnrich output, with these columns: GO.ID,Term,Annotated,Significant,AllDEG,Pvalue,Class,gene}
+
+\item{MainTitle}{Plot Title}
+
+\item{onlySig}{whether plot only significant Terms}
+
+\item{useFDR}{whether use FDR to define significant}
+
+\item{cut}{p value significant threshold, if useFDR is set, FDR pvalue is used}
+
+\item{top}{top n terms used to plot in each BP/MF/CC}
+
+\item{TrimTerm}{whether to trim long term name to specific length}
+
+\item{TermWidth}{Term longest width, if TrimTerm is set, long Terms will be trimmed, otherwise wrapped into specific length}
+
+\item{ColorScheme}{Color scheme used to plot pvalue, 'ryb', 'rwb', 'ryg', 'rwg', 'rw'(default), 'bw', 'gw'}
+
+\item{ColorReverse}{whether reverse the color order}
+}
 \description{
-do GO  enrichment bubble plot using GOEnrich result.
+GO enrichment bubble plot
 }

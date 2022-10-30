@@ -6,6 +6,17 @@
 \usage{
 KEGGenrich(deglist, taxon, outdir = NULL, outprefix, useFDR = FALSE)
 }
+\arguments{
+\item{deglist}{DEG vector}
+
+\item{taxon}{taxon id , use KEGGdbInfo() to check available ids}
+
+\item{outdir}{output directory}
+
+\item{outprefix}{output file prefix}
+
+\item{useFDR}{whether to add FDR column}
+}
 \description{
 do KEGG pathway enrichment by a list of degs.
 }

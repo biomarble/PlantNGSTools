@@ -13,6 +13,19 @@ KEGGenrich_blastkoala(
   useFDR = FALSE
 )
 }
+\arguments{
+\item{deglist}{DEG vector}
+
+\item{blastkoalafile}{blastkoala output file path,  Gene ID to KEGG ID pair by row}
+
+\item{taxonid}{KEGG pathway taxon id prefix , for example, osa is for Oryza Sativa.  available ids : https://www.genome.jp/kegg-bin/find_org_www?mode=abbr&obj=mode.map}
+
+\item{outdir}{output directory}
+
+\item{outprefix}{output file prefix}
+
+\item{useFDR}{whether to add FDR column}
+}
 \description{
 do KEGG pathway enrichment by a list of degs. Using blastkoala method to convert from GeneID to KEGG ID.
 }

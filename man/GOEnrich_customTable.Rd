@@ -13,6 +13,19 @@ GOEnrich_customTable(
   outprefix = NULL
 )
 }
+\arguments{
+\item{deglist}{DEG vector}
+
+\item{tableFile}{path of the custom GO annotation file, which annotates two-column pairwise gene-GO per row}
+
+\item{useFDR}{whether to use FDR}
+
+\item{cut}{significant pvalue threshold, if useFDR is set, use FDR instead}
+
+\item{outdir}{output directory}
+
+\item{outprefix}{output file prefix}
+}
 \description{
 do GO enrichment by a list of DEGs using custom table annotation.
 }

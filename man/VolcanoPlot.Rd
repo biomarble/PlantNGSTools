@@ -16,6 +16,25 @@ VolcanoPlot(
   point.size = 2
 )
 }
+\arguments{
+\item{dat}{deg analysis result dataframe with ID,FCcut,log2FoldChange,Pvalue or FDR}
+
+\item{useFDR}{whether to use FDR to define significance}
+
+\item{MainTitle}{main title of plot}
+
+\item{cut}{P value significant cut , if useFDR is set, FDR is used}
+
+\item{FCcut}{FoldChange cut significant cut}
+
+\item{xlim}{x axis limits}
+
+\item{showlabel}{whether to show top significant gene names}
+
+\item{showlabel.num}{top number}
+
+\item{point.size}{point size}
+}
 \description{
 do volcano plot.
 }

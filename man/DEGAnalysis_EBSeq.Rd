@@ -13,6 +13,19 @@ DEGAnalysis_EBSeq(
   treat = "Manually_select"
 )
 }
+\arguments{
+\item{countMatrix}{input count matrix, rows are genes and columns are samples}
+
+\item{cut}{significant threshold of FDR}
+
+\item{FCcut}{Fold Change threshold}
+
+\item{outdir}{output file directory}
+
+\item{control}{control sample name, used as denominator in Fold Change calculation}
+
+\item{treat}{treat sample name, used as numerator  in Fold Change calculation}
+}
 \description{
 do DEG analysis using samples without replicates by EBSeq.
 }

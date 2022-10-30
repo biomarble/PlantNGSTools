@@ -13,6 +13,19 @@ GOEnrich_customMapping(
   outprefix = NULL
 )
 }
+\arguments{
+\item{deglist}{DEG vector}
+
+\item{mappingfile}{path of the custom GO annotation file, which annotates each gene in a row, separate GOs with comma(,)}
+
+\item{useFDR}{whether to use FDR}
+
+\item{cut}{significant pvalue threshold, if useFDR is set, use FDR instead}
+
+\item{outdir}{output directory}
+
+\item{outprefix}{output file prefix}
+}
 \description{
 do GO enrichment by a list of DEGs using custom mapping  file.
 }

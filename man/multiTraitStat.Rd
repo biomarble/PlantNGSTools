@@ -6,6 +6,9 @@
 \usage{
 multiTraitStat(data)
 }
+\arguments{
+\item{data}{input trait dataframe, with traits as columns}
+}
 \description{
 Frequently used stats for trait analysis.
 }

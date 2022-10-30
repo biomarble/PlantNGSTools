@@ -2,10 +2,13 @@
 % Please edit documentation in R/plot.r
 \name{multiTraitPlot}
 \alias{multiTraitPlot}
-\title{Frequently used stats for trait.}
+\title{trait Plot.}
 \usage{
 multiTraitPlot(data)
 }
+\arguments{
+\item{data}{input trait dataframe, with traits as columns}
+}
 \description{
-Frequently used stats for trait.
+Trait plot with histograms/correlation/density.
 }

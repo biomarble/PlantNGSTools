@@ -1,3 +1,10 @@
+#' @param deglist  DEG vector
+#'
+#' @param taxon  taxon id , use KEGGdbInfo() to check available ids
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to add FDR column
+#'
 #' @title KEGG pathway enrichment tools.
 #' @description  do KEGG pathway enrichment by a list of degs.
 #' @export
@@ -12,6 +19,14 @@ KEGGenrich <- function(deglist,
     return(res)
 }
 
+#' @param deglist  DEG vector
+#'
+#' @param taxonid  KEGG pathway taxon id prefix , for example, osa is for Oryza Sativa.  available ids : https://www.genome.jp/kegg-bin/find_org_www?mode=abbr&obj=mode.map
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to add FDR column
+#' @param blastkoalafile blastkoala output file path,  Gene ID to KEGG ID pair by row
+#'
 #' @title KEGG pathway enrichment tools for blastkoala ko annotation.
 #' @description  do KEGG pathway enrichment by a list of degs. Using blastkoala method to convert from GeneID to KEGG ID.
 #' @export
@@ -26,6 +41,7 @@ KEGGenrich_blastkoala <- function(deglist,
     return(res)
 }
 
+#'
 #' @title KEGG pathway enrichment tools commmon.
 #' @description  do KEGG pathway enrichment by a list of degs common.
 #' @import R2HTML

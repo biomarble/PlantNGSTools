@@ -13,6 +13,19 @@ GOEnrich_pannzer2(
   outprefix = NULL
 )
 }
+\arguments{
+\item{deglist}{DEG vector}
+
+\item{pannzerfile}{custom annotation file using pannzer2 database}
+
+\item{useFDR}{whether to use FDR}
+
+\item{cut}{significant pvalue threshold, if useFDR is set, use FDR instead}
+
+\item{outdir}{output directory}
+
+\item{outprefix}{output file prefix}
+}
 \description{
 do GO enrichment by a list of DEGs using pannzer2 result.
 }

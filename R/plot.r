@@ -15,6 +15,14 @@ colorScheme = function(colorsheme = "ryb", n = 100) {
         cc = colorRampPalette(c('white', 'green'))
     return(cc(n))
 }
+#' @param dataset a dataframe of KEGG Enrichment output, with these columns:'ID', 'KEGGPathway', 'Count', 'all', 'P'
+#'
+#' @param MainTitle main title
+#' @param top  top n kegg pathways used to plot
+#' @param ColorScheme  "ryb", 'rwb', 'ryg', 'rwg', 'rw', 'bw', 'gw'
+#' @param ColorReverse  whether to reverse color order
+#' @param xangle   angle of x axis text
+#'
 #' @title KEGG enrichment bubble plot.
 #' @description  do KEGG pathway enrichment bubble plot using KEGGenrich result.
 #' @import ggplot2
@@ -96,48 +104,58 @@ KEGGbubble = function(dataset,
     return(g)
 }
 
-#' @title GO enrichment bubble plot.
-#' @description  do GO  enrichment bubble plot using GOEnrich result.
+#' GO enrichment bubble plot
+#'
+#' @param dataset a dataframe of GOEnrich output, with these columns: GO.ID,Term,Annotated,Significant,AllDEG,Pvalue,Class,gene
+#' @param MainTitle Plot Title
+#' @param onlySig whether plot only significant Terms
+#' @param useFDR  whether use FDR to define significant
+#' @param cut     p value significant threshold, if useFDR is set, FDR pvalue is used
+#' @param top     top n terms used to plot in each BP/MF/CC
+#' @param TrimTerm  whether to trim long term name to specific length
+#' @param TermWidth Term longest width, if TrimTerm is set, long Terms will be trimmed, otherwise wrapped into specific length
+#' @param ColorScheme  Color scheme used to plot pvalue, 'ryb', 'rwb', 'ryg', 'rwg', 'rw'(default), 'bw', 'gw'
+#' @param ColorReverse  whether reverse the color order
+#'
 #' @import ggplot2
 #' @importFrom  dplyr group_by
 #' @importFrom  dplyr slice_max
 #' @importFrom  dplyr filter
+#' @importFrom  scales label_wrap
 #' @importFrom magrittr %>%
 #' @export
 GObubble = function(dataset,
                     MainTitle = "",
                     onlySig = T,
                     useFDR=F,
-                    limitTerm=T,
-                    limitSplit=", ",
                     cut = 0.05,
                     top = 10,
+                    TrimTerm=T,
+                    TermWidth=60,
                     ColorScheme = "rw",
                     ColorReverse = F) {
     checkParams(ColorScheme,
                 c("ryb", 'rwb', 'ryg', 'rwg', 'rw', 'bw', 'gw'),
                 'ColorScheme')
+
     if(useFDR){
         dataset$Pvalue=p.adjust(dataset$Pvalue,method="BH")
     }
     if (onlySig) {
         dataset = dataset %>% filter(Pvalue < cut)
     }
-    #   dataset$Term=strtrim(dataset$Term,maxTermLen)
     dataset$Pvalue = -log10(dataset$Pvalue)
     dataset = dataset %>% group_by(Class) %>%
         slice_max(order_by = Pvalue, n = top) %>%as.data.frame
-     
-    if(limitTerm){
-     dataset$Term=sapply(strsplit(dataset$Term,split = limitSplit),function(x) x[1])
-    }else{
-     dataset$Term=gsub(', ',',\n',dataset$Term)
+
+    if(TrimTerm){
+        #   dataset$Term2=sapply(strsplit(dataset$Term,split = SplitSep),function(x) x[1])
+        dataset$Term=strtrim(dataset$Term,TermWidth)
     }
 
     dataset$GeneRatio = dataset$Significant / dataset$AllDEG * 100
     order <- order(dataset$GeneRatio)
-    dataset$Term <-
-        factor(dataset$Term, levels = dataset$Term[order])
+    dataset$Term <-factor(dataset$Term, levels = dataset$Term[order])
     xLabel = 'Count'
     yLabel = ''
     sizeLabel = 'Gene Ratio (%)'
@@ -165,7 +183,7 @@ GObubble = function(dataset,
             guide = "legend"
         ) +
         scale_color_gradientn(colours = col, breaks = colorbreaks) +
-        scale_y_discrete(position = "left") +
+        scale_y_discrete(position = "left",labels=scales::label_wrap(TermWidth)) +
         labs(
             title = MainTitle,
             x = xLabel,
@@ -174,7 +192,8 @@ GObubble = function(dataset,
             color = colorLabel
         ) +
         theme(
-            plot.title = element_text(hjust = 0.5),
+            plot.title = element_text(hjust = 0.5),panel.spacing = unit(0, "cm"),
+
             axis.text = element_text(colour = "black", size = 11),
             axis.text.y = element_text(lineheight = 0.65),
             legend.text = element_text(size = 10),
@@ -186,6 +205,17 @@ GObubble = function(dataset,
     return(g)
 }
 
+#' @param dat  deg analysis result dataframe with ID,FCcut,log2FoldChange,Pvalue or FDR
+#'
+#' @param useFDR whether to use FDR to define significance
+#' @param MainTitle main title of plot
+#' @param cut   P value significant cut , if useFDR is set, FDR is used
+#' @param FCcut  FoldChange cut significant cut
+#' @param xlim   x axis limits
+#' @param showlabel  whether to show top significant gene names
+#' @param showlabel.num  top number
+#' @param point.size  point size
+#'
 #' @title Volcano plot for DEG analysis results.
 #' @description  do volcano plot.
 #' @import ggplot2
@@ -293,6 +323,17 @@ VolcanoPlot = function(dat,
     return(g)
 }
 
+#' @param dat  deg analysis result dataframe with ID,FCcut,log2FoldChange,Pvalue or FDR
+#'
+#' @param useFDR whether to use FDR to define significance
+#' @param MainTitle main title of plot
+#' @param cut   P value significant cut , if useFDR is set, FDR is used
+#' @param FCcut  FoldChange cut significant cut
+#' @param ylim    y axis limits
+#' @param showlabel  whether to show top significant gene names
+#' @param showlabel.num  top number
+#' @param point.size  point size
+#'
 #' @title MA plot for DEG analysis results.
 #' @description  do MA plot.
 #' @import ggplot2
@@ -395,6 +436,8 @@ MAPlot = function(dat,
 
 
 
+#' @param data  input trait dataframe, with traits as columns
+#'
 #' @title Frequently used stats for trait analysis.
 #' @description  Frequently used stats for trait analysis.
 #' @importFrom  fBasics basicStats
@@ -410,8 +453,10 @@ multiTraitStat<-function(data){
     return(out)
 }
 
-#' @title Frequently used stats for trait.
-#' @description  Frequently used stats for trait.
+#' @param data input trait dataframe, with traits as columns
+#'
+#' @title  trait Plot.
+#' @description  Trait plot with histograms/correlation/density.
 #' @export
 multiTraitPlot<-function(data){
     custom_cor <- function(x, y,cutoff=0.05) {
@@ -471,15 +516,23 @@ getAllChildren <- function(goids,class='BP')
   ans <- ans[!is.na(ans)]
 }
 
-#' @title GO barplot  .
-#' @description GO barplot  .
+#' @param deglist DEG name vector
+#'
+#' @param taxonid taxon id , use GOdbInfo() to check available ids
+#' @param customMapping    path of the custom GO annotation file, which annotates each gene in a row, separate GOs with comma(,)
+#' @param eggnog   path of the custom GO annotation using eggNOG database
+#' @param pannzer2  path of the custom GO annotation using pannzer2 database
+#' @param customTable path of the custom GO annotation file, which annotates two-column pairwise gene-GO per row
+#'
+#' @title GO barplot .
+#' @description Barplot of secondary GO terms.
 #' @importFrom dplyr select
 #' @importFrom reshape2 melt
 #' @importFrom magrittr %>%
 #' @import ggplot2
 #' @import topGO
 #' @export
-GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,panzer2=NULL,customTable=NULL){
+GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,pannzer2=NULL,customTable=NULL){
   if(!is.null(taxonid)){
     checkParams(taxonid, names(godb), 'taxon')
     geneID2GO = godb[[taxonid]][['db']]
@@ -496,8 +549,8 @@ GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,panzer2=NULL,
        dplyr::select(c('#query', 'GOs'))%>% na.omit()
     geneID2GO <- strsplit(data$GOs, ",")
     names(geneID2GO) = data$`#query`
-  }else  if(!is.null(panzer2)){
-    geneID2GO = PANNZERres2GOdb(panzer2)
+  }else  if(!is.null(pannzer2)){
+    geneID2GO = PANNZERres2GOdb(pannzer2)
   }else  if(!is.null(customTable)){
     geneID2GOtable=read.delim(customTable,header=T,sep="\t")
     checkParams(colnames(geneID2GOtable),c('GeneID','GOID'),string = "geneID2GOtable列名错误")
@@ -513,15 +566,15 @@ GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,panzer2=NULL,
   bp_terms <- getAllChildren("GO:0008150",'BP')
   cc_terms <- getAllChildren("GO:0005575",'CC')
   mf_terms <- getAllChildren("GO:0003674",'MF')
-  
+
   bpObj <-new("topGOdata",nodeSize = 1,ontology = 'BP',allGenes = universe,annot = annFUN.gene2GO,gene2GO = geneID2GO)
   mfObj <-new("topGOdata",nodeSize = 1,ontology = 'MF',allGenes = universe,annot = annFUN.gene2GO,gene2GO = geneID2GO)
   ccObj <-new("topGOdata",nodeSize = 1,ontology = 'CC',allGenes = universe,annot = annFUN.gene2GO,gene2GO = geneID2GO)
-  
+
   allbpGO = topGO::genesInTerm(bpObj,bp_terms)
   allccGO = topGO::genesInTerm(ccObj,cc_terms)
   allmfGO = topGO::genesInTerm(mfObj,mf_terms)
-  
+
   stat1=data.frame(ID=AnnotationDbi::Term(names(allbpGO)),
                    allGene=sapply(names(allbpGO),
                                   function(x){length(allbpGO[[x]])}),
@@ -544,7 +597,7 @@ GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,panzer2=NULL,
                    Class='CC'
   )
   plotdata=rbind(stat1,stat2,stat3)%>%as.data.frame()%>%reshape2::melt(id.vars=c('ID','Class'))
-  
+
   ord=order(plotdata[plotdata$variable=='allGene','value'],decreasing = T)
   plotdata$ID=factor(plotdata$ID,levels=plotdata[plotdata$variable=='allGene','ID'][ord])
   plotdata[plotdata$value==0,'value']=1

@@ -111,7 +111,16 @@ fetchPathways = function(taxon, ensembldataset, useArchive = F) {
     return(res)
 }
 
-
+#' @param countMatrix  input count matrix, rows are genes and columns are samples
+#'
+#' @param group   group dataframe, first column: sample ID, second column: group name
+#' @param useFDR  whether to use FDR to define significant DEG
+#' @param cut  significant P value threshold, is useFDR is set , FDR is used
+#' @param FCcut Fold Change threshold
+#' @param outdir  output file directory
+#' @param control control group name, used as denominator in Fold Change calculation
+#' @param treat  treat group name, used as numerator  in Fold Change calculation
+#'
 #' @title DEG analysis using samples with replicates.
 #' @description  do DEG analysis using samples with replicates by DESeq2.
 #' @import DESeq2
@@ -213,6 +222,14 @@ DEGAnalysis_DESeq2 <-
         filepath$deg = paste0(outdir, '/', control, '.vs.', treat, '.DEG.tsv')
         return(filepath)
     }
+#' @param countMatrix  input count matrix, rows are genes and columns are samples
+#'
+#' @param cut  significant threshold of FDR
+#' @param FCcut Fold Change threshold
+#' @param outdir  output file directory
+#' @param control control sample name, used as denominator in Fold Change calculation
+#' @param treat  treat sample name, used as numerator  in Fold Change calculation
+#'
 #' @title DEG analysis using samples without replicates.
 #' @description  do DEG analysis using samples without replicates by EBSeq.
 #' @import EBSeq
@@ -346,6 +363,11 @@ checkGroup = function(matrix, group) {
     }
 }
 
+#' @param matrix input dataframe
+#'
+#' @param groupInfo group dataframe, with two column : ID,Group
+#' @param method  grouping method , "mean", 'median', 'sum'
+#'
 #' @title merge column values according group information.
 #' @description  merge column values according group information.
 #' @export

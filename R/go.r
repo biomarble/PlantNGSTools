@@ -1,3 +1,12 @@
+
+#' @param deglist  DEG vector
+#'
+#' @param taxon  taxon id , use GOdbInfo() to check available ids
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to use FDR
+#' @param cut  significant pvalue threshold, if useFDR is set, use FDR instead
+#'
 #' @title GO enrichment .
 #' @description  do GO enrichment by a list of DEGs.
 #' @export
@@ -17,6 +26,14 @@ GOEnrich = function(deglist,
 }
 
 
+#' @param deglist  DEG vector
+#'
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to use FDR
+#' @param cut  significant pvalue threshold, if useFDR is set, use FDR instead
+#' @param eggnogFile  custom annotation file using eggNOG database
+#'
 #' @title GO enrichment using eggnog Mapper annotation.
 #' @description  do GO enrichment by a list of DEGs using eggnog Mapper annotation.
 #' @importFrom magrittr %>%
@@ -54,6 +71,14 @@ GOEnrich_eggnog = function(deglist,
 }
 
 
+#' @param deglist  DEG vector
+#'
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to use FDR
+#' @param cut  significant pvalue threshold, if useFDR is set, use FDR instead
+#' @param pannzerfile  custom annotation file using pannzer2 database
+#'
 #' @title GO enrichment using pannzer2 result.
 #' @description  do GO enrichment by a list of DEGs using pannzer2 result.
 #' @export
@@ -71,6 +96,15 @@ GOEnrich_pannzer2 = function(deglist,
     return(res)
 }
 
+
+#' @param deglist  DEG vector
+#'
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to use FDR
+#' @param cut  significant pvalue threshold, if useFDR is set, use FDR instead
+#' @param tableFile path of the custom GO annotation file, which annotates two-column pairwise gene-GO per row
+#'
 #' @title GO enrichment using custom table  annotation.
 #' @description  do GO enrichment by a list of DEGs using custom table annotation.
 #' @export
@@ -92,7 +126,14 @@ GOEnrich_customTable = function(deglist,
                         outdir=outdir,outprefix=outprefix)
     return(res)
 }
-
+#' @param deglist  DEG vector
+#'
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to use FDR
+#' @param cut  significant pvalue threshold, if useFDR is set, use FDR instead
+#' @param mappingfile path of the custom GO annotation file, which annotates each gene in a row, separate GOs with comma(,)
+#'
 #' @title GO enrichment using custom mapping file.
 #' @description  do GO enrichment by a list of DEGs using custom mapping  file.
 #' @importFrom topGO readMappings

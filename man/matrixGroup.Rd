@@ -6,6 +6,13 @@
 \usage{
 matrixGroup(matrix, groupInfo, method = "mean")
 }
+\arguments{
+\item{matrix}{input dataframe}
+
+\item{groupInfo}{group dataframe, with two column : ID,Group}
+
+\item{method}{grouping method , "mean", 'median', 'sum'}
+}
 \description{
 merge column values according group information.
 }

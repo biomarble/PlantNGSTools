@@ -2,17 +2,30 @@
 % Please edit documentation in R/plot.r
 \name{GOBar}
 \alias{GOBar}
-\title{GO barplot  .}
+\title{GO barplot .}
 \usage{
 GOBar(
   deglist,
   taxonid = NULL,
   customMapping = NULL,
   eggnog = NULL,
-  panzer2 = NULL,
+  pannzer2 = NULL,
   customTable = NULL
 )
 }
+\arguments{
+\item{deglist}{DEG name vector}
+
+\item{taxonid}{taxon id , use GOdbInfo() to check available ids}
+
+\item{customMapping}{path of the custom GO annotation file, which annotates each gene in a row, separate GOs with comma(,)}
+
+\item{eggnog}{path of the custom GO annotation using eggNOG database}
+
+\item{pannzer2}{path of the custom GO annotation using pannzer2 database}
+
+\item{customTable}{path of the custom GO annotation file, which annotates two-column pairwise gene-GO per row}
+}
 \description{
-GO barplot  .
+Barplot of secondary GO terms.
 }

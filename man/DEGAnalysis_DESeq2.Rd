@@ -15,6 +15,23 @@ DEGAnalysis_DESeq2(
   outdir = NULL
 )
 }
+\arguments{
+\item{countMatrix}{input count matrix, rows are genes and columns are samples}
+
+\item{group}{group dataframe, first column: sample ID, second column: group name}
+
+\item{useFDR}{whether to use FDR to define significant DEG}
+
+\item{cut}{significant P value threshold, is useFDR is set , FDR is used}
+
+\item{FCcut}{Fold Change threshold}
+
+\item{control}{control group name, used as denominator in Fold Change calculation}
+
+\item{treat}{treat group name, used as numerator  in Fold Change calculation}
+
+\item{outdir}{output file directory}
+}
 \description{
 do DEG analysis using samples with replicates by DESeq2.
 }
