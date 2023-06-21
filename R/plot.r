@@ -49,6 +49,9 @@ KEGGbubble = function(dataset,
 
     if(TrimName){
         dataset$KEGGPathway=strtrim(dataset$KEGGPathway,NameWidth)
+        if(length(unique(dataset$KEGGPathway))!=length(dataset$KEGGPathway)){
+            stop(call. = F,"Pathway名称重复\n请设置参数TrimName=F，或调大参数NameWidth后重试！",'\n')
+        }
     }
 
     k = sort(dataset$P,
@@ -155,11 +158,24 @@ GObubble = function(dataset,
     dataset = dataset %>% group_by(Class) %>%
         slice_max(order_by = Pvalue, n = top) %>%as.data.frame
 
+
     if(TrimTerm){
         #   dataset$Term2=sapply(strsplit(dataset$Term,split = SplitSep),function(x) x[1])
         dataset$Term=strtrim(dataset$Term,TermWidth)
+        if(length(unique(dataset$Term))!=length(dataset$Term)){
+            stop(call. = F,"Term名称重复\n请设置参数TrimTerm=F，或调大参数TermWidth后重试！",'\n')
+        }
     }
 
+    if(nrow(dataset%>%filter(Class=='BP'))>top){
+        warning(call. = F,paste("BP结果存在相等的p值，参与绘图的BP Term可能大于",top))
+    }
+    if(nrow(dataset%>%filter(Class=='MF'))>top){
+        warning(call. = F,paste("MF结果存在相等的p值，参与绘图的MF Term可能大于",top))
+    }
+    if(nrow(dataset%>%filter(Class=='CC'))>top){
+        warning(call. = F,paste("CC结果存在相等的p值，参与绘图的CC Term可能大于",top))
+    }
     dataset$GeneRatio = dataset$Significant / dataset$AllDEG * 100
     order <- order(dataset$GeneRatio)
     dataset$Term <-factor(dataset$Term, levels = dataset$Term[order])

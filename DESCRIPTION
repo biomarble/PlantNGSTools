@@ -1,7 +1,7 @@
 Package: PlantNGSTools
 Type: Package
 Title: NGS bioinformatics tools for plants
-Version: 0.4.1
+Version: 0.4.2
 Author: Marble
 Maintainer: Marble <biomarble@163.com>
 Description: NGS bioinformatics tools for plants.
@@ -10,10 +10,11 @@ Encoding: UTF-8
 LazyData: true
 biocViews:
 Depends:
-    R (>= 4.0.0)
+    R (>= 4.1.0)
 Imports:
     ggplot2 (>= 3.3.2),
     BiocManager,
+    reshape2,
     dplyr,
     ggrepel,
     topGO,
@@ -28,4 +29,4 @@ Imports:
     fBasics,
     readr,
     KEGGREST
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

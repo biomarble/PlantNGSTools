@@ -7,6 +7,8 @@
 KEGGbubble(
   dataset,
   MainTitle = "",
+  TrimName = F,
+  NameWidth = 50,
   top = 10,
   ColorScheme = "rw",
   ColorReverse = F,
