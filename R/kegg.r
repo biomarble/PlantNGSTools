@@ -87,10 +87,10 @@ KEGGenrich_common=function(deglist,
 
         Link = paste("<a target=\"_blank\" href=\"",
                      paste("https://www.genome.jp/entry/", degInPath[, "ID"], sep = ""),
-                     "/",
+                     "\"/",
                      ">",
                      degInPath[, "GeneID"],
-                     "\"</a>",
+                     "</a>",
                      sep = "")
 
         if (x == 0) {
@@ -103,10 +103,10 @@ KEGGenrich_common=function(deglist,
 
         aLink = paste("<a target=\"_blank\" href=\"",
                      paste("https://www.genome.jp/entry/", allInPath[, "ID"], sep = ""),
-                     "/",
+                     "\"/",
                      ">",
                      allInPath[, "GeneID"],
-                     "\"</a>",
+                     "</a>",
                      sep = "")
         if (m == 0) {
             allgeneLink[i] = "--"
