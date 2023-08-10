@@ -82,17 +82,17 @@ KEGGenrich_common=function(deglist,
         p[i, 2] = m
         p[i, 3] = phyper(x - 1, m, N - m, k, lower.tail = FALSE)
         urlColor[i] = apply(as.matrix(paste(
-            "/", t(unique(degInPath[, 'ID'])), '%09red', sep = ""
+            "/", t(unique(degInPath[, 'ID'])), "%09red", sep = ""
         )), 2, paste, collapse = "")
-        Link = paste('<a target="_blank" href=',
-                     shQuote(
-                         paste('https://www.genome.jp/entry/', degInPath[, 'ID'], sep = "")
-                     ),
-                     '/',
-                     '>',
-                     degInPath[, 'GeneID'],
-                     '</a>',
+
+        Link = paste("<a target=\"_blank\" href=\"",
+                     paste("https://www.genome.jp/entry/", degInPath[, "ID"], sep = ""),
+                     "/",
+                     ">",
+                     degInPath[, "GeneID"],
+                     "\"</a>",
                      sep = "")
+
         if (x == 0) {
             geneLink[i] = "--"
         } else{
@@ -101,14 +101,12 @@ KEGGenrich_common=function(deglist,
 
         geneLink[i]=paste('<button class="btn btn-link "  data-toggle="popover" data-html="true" data-trigger="click" title="DEG List" data-content=\'',geneLink[i],'\'> ',x,'</button>')
 
-        aLink = paste('<a target="_blank" href=',
-                     shQuote(
-                         paste('https://www.genome.jp/entry/', allInPath[, 'ID'], sep = "")
-                     ),
-                     '/',
-                     '>',
-                     allInPath[, 'GeneID'],
-                     '</a>',
+        aLink = paste("<a target=\"_blank\" href=\"",
+                     paste("https://www.genome.jp/entry/", allInPath[, "ID"], sep = ""),
+                     "/",
+                     ">",
+                     allInPath[, "GeneID"],
+                     "\"</a>",
                      sep = "")
         if (m == 0) {
             allgeneLink[i] = "--"
@@ -161,7 +159,7 @@ KEGGenrich_common=function(deglist,
     )
     htmlOUT <-
         transform(output2,
-                  ID = paste('<a  target="_blank" href = ', shQuote(url), '/', '>', urlTitles, '</a>'))
+                  ID = paste('<a  target="_blank" href = \"', url, '\" />', urlTitles, '  </a>'))
     target <-
         HTMLInitFile(
             Title = "KEGG Pathway Ernichment Results",
