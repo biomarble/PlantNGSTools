@@ -1,0 +1,145 @@
+map00010	Glycolysis / Gluconeogenesis
+map00020	Citrate cycle (TCA cycle)
+map00030	Pentose phosphate pathway
+map00040	Pentose and glucuronate interconversions
+map00051	Fructose and mannose metabolism
+map00052	Galactose metabolism
+map00053	Ascorbate and aldarate metabolism
+map00061	Fatty acid biosynthesis
+map00062	Fatty acid elongation
+map00071	Fatty acid degradation
+map00073	Cutin, suberine and wax biosynthesis
+map00100	Steroid biosynthesis
+map00130	Ubiquinone and other terpenoid-quinone biosynthesis
+map00190	Oxidative phosphorylation
+map00195	Photosynthesis
+map00196	Photosynthesis - antenna proteins
+map00220	Arginine biosynthesis
+map00230	Purine metabolism
+map00232	Caffeine metabolism
+map00240	Pyrimidine metabolism
+map00250	Alanine, aspartate and glutamate metabolism
+map00260	Glycine, serine and threonine metabolism
+map00261	Monobactam biosynthesis
+map00270	Cysteine and methionine metabolism
+map00280	Valine, leucine and isoleucine degradation
+map00290	Valine, leucine and isoleucine biosynthesis
+map00300	Lysine biosynthesis
+map00310	Lysine degradation
+map00330	Arginine and proline metabolism
+map00340	Histidine metabolism
+map00350	Tyrosine metabolism
+map00360	Phenylalanine metabolism
+map00380	Tryptophan metabolism
+map00400	Phenylalanine, tyrosine and tryptophan biosynthesis
+map00402	Benzoxazinoid biosynthesis
+map00410	beta-Alanine metabolism
+map00430	Taurine and hypotaurine metabolism
+map00440	Phosphonate and phosphinate metabolism
+map00450	Selenocompound metabolism
+map00460	Cyanoamino acid metabolism
+map00470	D-Amino acid metabolism
+map00480	Glutathione metabolism
+map00500	Starch and sucrose metabolism
+map00510	N-Glycan biosynthesis
+map00511	Other glycan degradation
+map00513	Various types of N-glycan biosynthesis
+map00514	Other types of O-glycan biosynthesis
+map00520	Amino sugar and nucleotide sugar metabolism
+map00531	Glycosaminoglycan degradation
+map00543	Exopolysaccharide biosynthesis
+map00561	Glycerolipid metabolism
+map00562	Inositol phosphate metabolism
+map00563	Glycosylphosphatidylinositol (GPI)-anchor biosynthesis
+map00564	Glycerophospholipid metabolism
+map00565	Ether lipid metabolism
+map00590	Arachidonic acid metabolism
+map00591	Linoleic acid metabolism
+map00592	alpha-Linolenic acid metabolism
+map00600	Sphingolipid metabolism
+map00601	Glycosphingolipid biosynthesis - lacto and neolacto series
+map00603	Glycosphingolipid biosynthesis - globo and isoglobo series
+map00604	Glycosphingolipid biosynthesis - ganglio series
+map00620	Pyruvate metabolism
+map00630	Glyoxylate and dicarboxylate metabolism
+map00640	Propanoate metabolism
+map00650	Butanoate metabolism
+map00660	C5-Branched dibasic acid metabolism
+map00670	One carbon pool by folate
+map00710	Carbon fixation in photosynthetic organisms
+map00730	Thiamine metabolism
+map00740	Riboflavin metabolism
+map00750	Vitamin B6 metabolism
+map00760	Nicotinate and nicotinamide metabolism
+map00770	Pantothenate and CoA biosynthesis
+map00780	Biotin metabolism
+map00785	Lipoic acid metabolism
+map00790	Folate biosynthesis
+map00860	Porphyrin metabolism
+map00900	Terpenoid backbone biosynthesis
+map00901	Indole alkaloid biosynthesis
+map00902	Monoterpenoid biosynthesis
+map00904	Diterpenoid biosynthesis
+map00905	Brassinosteroid biosynthesis
+map00906	Carotenoid biosynthesis
+map00908	Zeatin biosynthesis
+map00909	Sesquiterpenoid and triterpenoid biosynthesis
+map00910	Nitrogen metabolism
+map00920	Sulfur metabolism
+map00940	Phenylpropanoid biosynthesis
+map00941	Flavonoid biosynthesis
+map00942	Anthocyanin biosynthesis
+map00943	Isoflavonoid biosynthesis
+map00944	Flavone and flavonol biosynthesis
+map00945	Stilbenoid, diarylheptanoid and gingerol biosynthesis
+map00950	Isoquinoline alkaloid biosynthesis
+map00960	Tropane, piperidine and pyridine alkaloid biosynthesis
+map00965	Betalain biosynthesis
+map00966	Glucosinolate biosynthesis
+map00970	Aminoacyl-tRNA biosynthesis
+map00999	Biosynthesis of various plant secondary metabolites
+map01040	Biosynthesis of unsaturated fatty acids
+map01100	Metabolic pathways
+map01110	Biosynthesis of secondary metabolites
+map01200	Carbon metabolism
+map01210	2-Oxocarboxylic acid metabolism
+map01212	Fatty acid metabolism
+map01230	Biosynthesis of amino acids
+map01232	Nucleotide metabolism
+map01240	Biosynthesis of cofactors
+map01250	Biosynthesis of nucleotide sugars
+map02010	ABC transporters
+map03008	Ribosome biogenesis in eukaryotes
+map03010	Ribosome
+map03013	Nucleocytoplasmic transport
+map03015	mRNA surveillance pathway
+map03018	RNA degradation
+map03020	RNA polymerase
+map03022	Basal transcription factors
+map03030	DNA replication
+map03040	Spliceosome
+map03050	Proteasome
+map03060	Protein export
+map03082	ATP-dependent chromatin remodeling
+map03083	Polycomb repressive complex
+map03250	Viral life cycle - HIV-1
+map03410	Base excision repair
+map03420	Nucleotide excision repair
+map03430	Mismatch repair
+map03440	Homologous recombination
+map03450	Non-homologous end-joining
+map04016	MAPK signaling pathway - plant
+map04070	Phosphatidylinositol signaling system
+map04075	Plant hormone signal transduction
+map04120	Ubiquitin mediated proteolysis
+map04122	Sulfur relay system
+map04130	SNARE interactions in vesicular transport
+map04136	Autophagy - other
+map04141	Protein processing in endoplasmic reticulum
+map04144	Endocytosis
+map04145	Phagosome
+map04146	Peroxisome
+map04148	Efferocytosis
+map04626	Plant-pathogen interaction
+map04712	Circadian rhythm - plant
+map04814	Motor proteins

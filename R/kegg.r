@@ -21,6 +21,34 @@ KEGGenrich <- function(deglist,
 
 #' @param deglist  DEG vector
 #'
+#' @param tableFile  custom kegg to map file
+#' @param outdir output directory
+#' @param outprefix output file prefix
+#' @param useFDR  whether to add FDR column
+#'
+#' @title KEGG pathway enrichment tools using custom annotation file.
+#' @description  do KEGG pathway enrichment by a list of degs using custom annotation file.
+#' @export
+KEGGenrich_customTable <- function(deglist,
+                       tableFile,
+                       outdir = NULL,
+                       outprefix,
+                       useFDR = FALSE) {
+
+    gid2keggpathway=read.delim(tableFile,header=T,sep="\t")
+    checkParams(colnames(gid2keggpathway),c('GeneID','KOID','PathwayID'),string = "tableFile列名错误")
+
+    gid2keggpathway=unique(gid2keggpathway)
+    dbpathwayInfo=keggList('pathway')
+    gid2keggpathway$Pathway=dbpathwayInfo[gid2keggpathway$PathwayID]
+    res=KEGGenrich_common(deglist,gid2keggpathway,outdir,outprefix,fdr=useFDR)
+    return(res)
+}
+
+
+
+#' @param deglist  DEG vector
+#'
 #' @param taxonid  KEGG pathway taxon id prefix , for example, osa is for Oryza Sativa.  available ids : https://www.genome.jp/kegg-bin/find_org_www?mode=abbr&obj=mode.map
 #' @param outdir output directory
 #' @param outprefix output file prefix
@@ -82,11 +110,11 @@ KEGGenrich_common=function(deglist,
         p[i, 2] = m
         p[i, 3] = phyper(x - 1, m, N - m, k, lower.tail = FALSE)
         urlColor[i] = apply(as.matrix(paste(
-            "/", t(unique(degInPath[, 'ID'])), "%09red", sep = ""
+            "/", t(unique(degInPath[, 'KOID'])), "%09red", sep = ""
         )), 2, paste, collapse = "")
 
         Link = paste("<a target=\"_blank\" href=\"",
-                     paste("https://www.genome.jp/entry/", degInPath[, "ID"], sep = ""),
+                     paste("https://www.genome.jp/entry/", degInPath[, "KOID"], sep = ""),
                      "\"/",
                      ">",
                      degInPath[, "GeneID"],
@@ -102,7 +130,7 @@ KEGGenrich_common=function(deglist,
         geneLink[i]=paste('<button class="btn btn-link "  data-toggle="popover" data-html="true" data-trigger="click" title="DEG List" data-content=\'',geneLink[i],'\'> ',x,'</button>')
 
         aLink = paste("<a target=\"_blank\" href=\"",
-                     paste("https://www.genome.jp/entry/", allInPath[, "ID"], sep = ""),
+                     paste("https://www.genome.jp/entry/", allInPath[, "KOID"], sep = ""),
                      "\"/",
                      ">",
                      allInPath[, "GeneID"],
