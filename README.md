@@ -1,6 +1,8 @@
 # PlantNGSTools - Plant RNA-seq analysis tool
 
 
+**Latest version:** [![Latest Version](https://img.shields.io/github/release/biomarble/PlantNGSTools.svg?style=flat?maxAge=86400)](https://github.com/biomarble/PlantNGSTools/releases)
+
 
 ## Tutorial
 
