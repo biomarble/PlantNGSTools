@@ -19,7 +19,10 @@ install.packages('devtools')
 devtools::install_github('biomarble/PlantNGSTools')
 ```
 
-
+if you have problems connecting github, try commands below:
+```
+devtools::install_url('https://ghfast.top/github.com/biomarble/PlantNGSTools/archive/refs/heads/main.zip')
+```
 
 ## Module
 
@@ -51,7 +54,3 @@ devtools::install_github('biomarble/PlantNGSTools')
 ## Tips
 
 - 任何疑问、提交Bug，请在[Issues](https://github.com/biomarble/PlantNGSTools/issues)反馈
-
-- 扫码关注公众号，不定期发布培训课程：<br>
-
-![qrcode.png](./qrcode.png)
