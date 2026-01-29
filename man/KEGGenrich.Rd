@@ -4,7 +4,15 @@
 \alias{KEGGenrich}
 \title{KEGG pathway enrichment tools.}
 \usage{
-KEGGenrich(deglist, taxon, outdir = NULL, outprefix, useFDR = FALSE)
+KEGGenrich(
+  deglist,
+  alllist = NULL,
+  taxon,
+  outdir = NULL,
+  outprefix,
+  cutP = 0.05,
+  useFDR = FALSE
+)
 }
 \arguments{
 \item{deglist}{DEG vector}

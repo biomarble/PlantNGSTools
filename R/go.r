@@ -10,7 +10,7 @@
 #' @title GO enrichment .
 #' @description  do GO enrichment by a list of DEGs.
 #' @export
-GOEnrich = function(deglist,
+GOEnrich = function(deglist,alllist=NULL,
                     taxon,
                     useFDR = FALSE,
                     cut=0.05,
@@ -21,6 +21,7 @@ GOEnrich = function(deglist,
     geneID2GO = godb[[taxon]][['db']]
     version = godb[[taxon]][['version']]
     cat('genome version:', version, '\n')
+    if(!is.null(alllist))   geneID2GO=geneID2GO[intersect(alllist,names(geneID2GO))]
     res=GOenrich_common(deglist,geneID2GO,useFDR=useFDR,cut=cut,outdir=outdir,outprefix=outprefix)
     return(res)
 }
@@ -43,7 +44,7 @@ GOEnrich = function(deglist,
 #' @importFrom dplyr select
 #' @export
 #'
-GOEnrich_eggnog = function(deglist,
+GOEnrich_eggnog = function(deglist,alllist=NULL,
                            eggnogFile,
                            useFDR = FALSE,
                            cut=0.05,
@@ -59,6 +60,7 @@ GOEnrich_eggnog = function(deglist,
        dplyr::select(c('#query', 'GOs'))%>% na.omit()
     geneID2GO <- strsplit(data$GOs, ",")
     names(geneID2GO) = data$`#query`
+    if(!is.null(alllist))   geneID2GO=geneID2GO[intersect(alllist,names(geneID2GO))]
     res = GOenrich_common(
         deglist,
         geneID2GO,
@@ -82,13 +84,14 @@ GOEnrich_eggnog = function(deglist,
 #' @title GO enrichment using pannzer2 result.
 #' @description  do GO enrichment by a list of DEGs using pannzer2 result.
 #' @export
-GOEnrich_pannzer2 = function(deglist,
+GOEnrich_pannzer2 = function(deglist,alllist=NULL,
                     pannzerfile,
                     useFDR = FALSE,
                     cut=0.05,
                     outdir = NULL,
                     outprefix=NULL) {
     geneID2GO = PANNZERres2GOdb(pannzerfile)
+    if(!is.null(alllist))   geneID2GO=geneID2GO[intersect(alllist,names(geneID2GO))]
     res=GOenrich_common(deglist,geneID2GO,
                         useFDR = useFDR,
                         cut=cut,
@@ -108,7 +111,7 @@ GOEnrich_pannzer2 = function(deglist,
 #' @title GO enrichment using custom table  annotation.
 #' @description  do GO enrichment by a list of DEGs using custom table annotation.
 #' @export
-GOEnrich_customTable = function(deglist,
+GOEnrich_customTable = function(deglist,alllist=NULL,
                            tableFile,
                            useFDR = FALSE,
                            cut=0.05,
@@ -120,6 +123,7 @@ GOEnrich_customTable = function(deglist,
     geneID2GO=lapply(unique(geneID2GOtable$GeneID), function (x) geneID2GOtable$GOID[geneID2GOtable$GeneID==x])
     names(geneID2GO)=unique(geneID2GOtable$GeneID)
 
+    if(!is.null(alllist))   geneID2GO=geneID2GO[intersect(alllist,names(geneID2GO))]
     res=GOenrich_common(deglist,geneID2GO,
                         useFDR = useFDR,
                         cut=cut,
@@ -138,13 +142,14 @@ GOEnrich_customTable = function(deglist,
 #' @description  do GO enrichment by a list of DEGs using custom mapping  file.
 #' @importFrom topGO readMappings
 #' @export
-GOEnrich_customMapping = function(deglist,
+GOEnrich_customMapping = function(deglist,alllist=NULL,
                            mappingfile,
                            useFDR = FALSE,
                            cut=0.05,
                            outdir = NULL,
                            outprefix=NULL) {
     geneID2GO<-readMappings(file=mappingfile)
+    if(!is.null(alllist))   geneID2GO=geneID2GO[intersect(alllist,names(geneID2GO))]
     res=GOenrich_common(deglist,geneID2GO,
                         useFDR = useFDR,
                         cut=cut,
@@ -243,6 +248,8 @@ GOenrich_common = function(deglist,
     if (!dir.exists(outdir)) {
         dir.create(outdir)
     }
+    cat('total GO annotated genes:',length(geneID2GO),'\n')
+    cat('GO annotated DEGs:',length(intersect(deglist,names(geneID2GO))),'\n')
     BP.res = GOenrichsub(deglist,
                          geneID2GO,
                          'BP',

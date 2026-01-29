@@ -6,6 +6,7 @@
 \usage{
 KEGGenrich_blastkoala(
   deglist,
+  alllist = NULL,
   blastkoalafile,
   taxonid = "ko",
   outdir = NULL,

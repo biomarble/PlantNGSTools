@@ -6,9 +6,11 @@
 \usage{
 KEGGenrich_customTable(
   deglist,
+  alllist = NULL,
   tableFile,
   outdir = NULL,
   outprefix,
+  cutP = 0.05,
   useFDR = FALSE
 )
 }

@@ -35,7 +35,7 @@ KEGGbubble = function(dataset,
                       NameWidth = 50,
                       top = 10,
                       ColorScheme = "rw",
-                      ColorReverse = F,xangle=45) {
+                      ColorReverse = F,xangle=0) {
     checkParams(ColorScheme,
                 c("ryb", 'rwb', 'ryg', 'rwg', 'rw', 'bw', 'gw'),
                 'ColorScheme')
@@ -91,7 +91,7 @@ KEGGbubble = function(dataset,
         ) +
         theme_bw() +
         scale_size(breaks = drawbreaks ,
-                   labels = drawbreaks,
+               #    labels = drawbreaks,
                    range = c(5, 10)) +
         theme(
             plot.title = element_text(hjust = 0.5, colour = "black"),
@@ -190,7 +190,11 @@ GObubble = function(dataset,
     }
     col = col[15:85]
     colorbreaks = pretty(dataset$Pvalue, 5)
+    if(length(unique(dataset$Pvalue))==1) colorbreaks=unique(dataset$Pvalue)
+
     sizebreaks = pretty(dataset$GeneRatio, 5)
+    if(length(unique(dataset$GeneRatio))==1) sizebreaks=unique(dataset$GeneRatio)
+
     g <- ggplot(data = dataset, mapping = aes(Significant, Term)) +
         theme_bw() +
         theme(aspect.ratio = 1.1)+
@@ -315,7 +319,7 @@ VolcanoPlot = function(dat,
     g <- g + scale_color_manual(values = colorVector)
     g <- g + geom_vline(xintercept = 0,
                         color = 'grey',
-                        size = 1)
+                        lwd = 0.5)
     g <-
         g + theme(axis.text = element_text(size = 10, colour = "black"))
     g <-
@@ -429,7 +433,7 @@ MAPlot = function(dat,
         scale_color_manual(values = colorvector) +
         geom_hline(yintercept = 0,
                    color = 'grey',
-                   size = 1) +
+                   lwd = 0.5) +
         theme(axis.text = element_text(size = 10, colour = "black")) +
         theme(legend.position = "right", legend.title = element_blank()) +
         labs(title = MainTitle, x = "Normalized Expression", y = "log2(Fold Change)") +
@@ -457,8 +461,6 @@ MAPlot = function(dat,
     return(g)
 }
 
-
-
 #' @param data  input trait dataframe, with traits as columns
 #'
 #' @title Frequently used stats for trait analysis.
@@ -470,7 +472,7 @@ multiTraitStat<-function(data){
 
     stats=as.data.frame(t(basicStats(data)[c('nobs','NA','Minimum','Maximum','Mean','Median','Stdev','Skewness','Kurtosis'),]))
 
-    DiversityIndex=sapply(apply(data,2,na.omit),diversity)
+    DiversityIndex=sapply(data,diversity)
     CV=stats$Stdev/stats$Mean
     out=data.frame(stats,CV,DiversityIndex)
     return(out)
@@ -599,48 +601,49 @@ GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,pannzer2=NULL
   allmfGO = topGO::genesInTerm(mfObj,mf_terms)
 
   stat1=data.frame(ID=AnnotationDbi::Term(names(allbpGO)),
-                   allGene=sapply(names(allbpGO),
+                   background=sapply(names(allbpGO),
                                   function(x){length(allbpGO[[x]])}),
-                   DEG=sapply(names(allbpGO),
+                   interest=sapply(names(allbpGO),
                               function(x){length(intersect(deglist,allbpGO[[x]]))}),
                    Class='BP'
   )
   stat2=data.frame(ID=AnnotationDbi::Term(names(allmfGO)),
-                   allGene=sapply(names(allmfGO),
+                   background=sapply(names(allmfGO),
                                   function(x){length(allmfGO[[x]])}),
-                   DEG=sapply(names(allmfGO),
+                   interest=sapply(names(allmfGO),
                               function(x){length(intersect(deglist,allmfGO[[x]]))}),
                    Class='MF'
   )
   stat3=data.frame(ID=AnnotationDbi::Term(names(allccGO)),
-                   allGene=sapply(names(allccGO),
+                   background=sapply(names(allccGO),
                                   function(x){length(allccGO[[x]])}),
-                   DEG=sapply(names(allccGO),
+                   interest=sapply(names(allccGO),
                               function(x){length(intersect(deglist,allccGO[[x]]))}),
                    Class='CC'
   )
   plotdata=rbind(stat1,stat2,stat3)%>%as.data.frame()%>%reshape2::melt(id.vars=c('ID','Class'))
 
-  ord=order(plotdata[plotdata$variable=='allGene','value'],decreasing = T)
-  plotdata$ID=factor(plotdata$ID,levels=plotdata[plotdata$variable=='allGene','ID'][ord])
+  ord=order(plotdata[plotdata$variable=='background','value'],decreasing = T)
+  plotdata$ID=factor(plotdata$ID,levels=plotdata[plotdata$variable=='background','ID'][ord])
   plotdata[plotdata$value==0,'value']=1
   usecolors=c("#A6CEE3", "#1F78B4" ,"#B2DF8A" ,"#33A02C", "#FB9A99", "#E31A1C")
-  names(usecolors)=c('BP DEG','BP allGene','CC DEG','CC allGene','MF DEG','MF allGene')
+  names(usecolors)=c('BP interest','BP background','CC interest','CC background','MF interest','MF background')
   g=ggplot(plotdata,aes(ID,value))+
     geom_bar(aes(fill=paste(Class,variable)),stat='identity',position = 'dodge')+
     labs(x="",y="",fill="")+
     facet_grid(.~Class,scales = 'free',space='free')+
     scale_y_continuous(trans='log10',expand=c(0,0))+
     scale_fill_manual(values=usecolors)+
-    theme_bw()+
+    theme_classic()+
     theme(
+      axis.text=element_text(color='black'),
       strip.background = element_blank(),
+      legend.position = 'left',
       strip.placement = 'outside',
-      legend.position="right",
       axis.text.x = element_text(angle=45,hjust = 1)
     )+
     guides(
-      fill = guide_legend(ncol = 2,byrow = T,label.position = 'left')
+      fill = guide_legend(ncol = 2,byrow = T,label.position = 'right')
     )
 
   return(g)

@@ -4,7 +4,14 @@
 \alias{KEGGenrich_common}
 \title{KEGG pathway enrichment tools commmon.}
 \usage{
-KEGGenrich_common(deglist, pathinfo, outdir = NULL, outprefix, fdr = FALSE)
+KEGGenrich_common(
+  deglist,
+  pathinfo,
+  outdir = NULL,
+  outprefix,
+  cutP,
+  fdr = FALSE
+)
 }
 \description{
 do KEGG pathway enrichment by a list of degs common.

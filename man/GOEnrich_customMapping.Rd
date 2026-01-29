@@ -6,6 +6,7 @@
 \usage{
 GOEnrich_customMapping(
   deglist,
+  alllist = NULL,
   mappingfile,
   useFDR = FALSE,
   cut = 0.05,

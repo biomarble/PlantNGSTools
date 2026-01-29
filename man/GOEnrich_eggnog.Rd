@@ -6,6 +6,7 @@
 \usage{
 GOEnrich_eggnog(
   deglist,
+  alllist = NULL,
   eggnogFile,
   useFDR = FALSE,
   cut = 0.05,

@@ -6,6 +6,7 @@
 \usage{
 GOEnrich_pannzer2(
   deglist,
+  alllist = NULL,
   pannzerfile,
   useFDR = FALSE,
   cut = 0.05,

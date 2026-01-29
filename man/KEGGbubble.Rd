@@ -12,7 +12,7 @@ KEGGbubble(
   top = 10,
   ColorScheme = "rw",
   ColorReverse = F,
-  xangle = 45
+  xangle = 0
 )
 }
 \arguments{

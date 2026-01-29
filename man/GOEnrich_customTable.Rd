@@ -6,6 +6,7 @@
 \usage{
 GOEnrich_customTable(
   deglist,
+  alllist = NULL,
   tableFile,
   useFDR = FALSE,
   cut = 0.05,
