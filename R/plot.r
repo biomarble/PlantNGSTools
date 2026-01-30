@@ -557,7 +557,7 @@ getAllChildren <- function(goids,class='BP')
 #' @import ggplot2
 #' @import topGO
 #' @export
-GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,pannzer2=NULL,customTable=NULL){
+GOBar=function(deglist,alllist=NULL,taxonid=NULL,customMapping=NULL,eggnog=NULL,pannzer2=NULL,customTable=NULL){
   if(!is.null(taxonid)){
     checkParams(taxonid, names(godb), 'taxon')
     geneID2GO = godb[[taxonid]][['db']]
@@ -585,6 +585,7 @@ GOBar=function(deglist,taxonid=NULL,customMapping=NULL,eggnog=NULL,pannzer2=NULL
     stop("error no GO database selected!\n")
   }
   GO2geneID <- topGO::inverseList(geneID2GO)
+  if(!is.null(alllist)) geneID2GO=geneID2GO[intersect(names(geneID2GO),alllist)]
   allgenes=names(geneID2GO)
   universe = factor(as.integer(allgenes %in% deglist))
   names(universe) = allgenes
